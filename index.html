@@ -217,6 +217,15 @@
     <main class="container mx-auto px-4 py-8">
         <!-- Navigation Tabs -->
         <div class="bg-white rounded-lg shadow-md mb-6">
+            <div class="flex items-center space-x-4">
+                <div class="text-right animate-fade-in">
+                    <div id="currentDate" class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onclick="toggleDateFormat()"></div>
+                    <div id="currentTime" class="text-lg font-semibold text-gray-800 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onclick="toggleTimeFormat()"></div>
+                </div>
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors animate-fade-in hover-scale">
+                    <i id="theme-icon" class="fas fa-moon text-gray-600 dark:text-yellow-400"></i>
+                </button>
+            </div>
             <div class="flex flex-wrap border-b">
                 <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="dashboard">
                     <i class="fas fa-chart-line mr-2"></i>Dashboard
@@ -480,17 +489,60 @@
                     </div>
                 </article>
 
-                <!-- Enhanced Cards -->
-                <article class="enhanced-card rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.4s">
+                <!-- Cryptocurrency -->
+                <article class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" onclick="openArticle('crypto-basics')" style="animation-delay: 0.5s">
                     <div class="flex items-center mb-4">
-                        <i class="fas fa-sparkles text-2xl text-white mr-3"></i>
-                        <span class="bg-white bg-opacity-20 text-white text-xs font-semibold px-2 py-1 rounded">Featured</span>
+                        <i class="fas fa-bitcoin text-2xl text-orange-500 mr-3"></i>
+                        <span class="bg-orange-100 text-orange-800 text-xs font-semibold px-2 py-1 rounded">Investing</span>
                     </div>
-                    <h3 class="text-lg font-bold mb-2">🎯 Featured: Money Tip of the Day</h3>
-                    <p class="text-white text-sm mb-4">Save 10% of everything you get: Whether it's allowance, birthday money, or job earnings - put 10% away before spending anything!</p>
-                    <button onclick="nextTip()" class="bg-white text-purple-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
-                        <i class="fas fa-sync-alt mr-2"></i>Next Tip
-                    </button>
+                    <h3 class="text-lg font-semibold mb-2">Cryptocurrency for Teens: What You Need to Know</h3>
+                    <p class="text-gray-600 text-sm mb-4">Bitcoin, Ethereum, and crypto explained. Should teens invest? Risks, rewards, and how to stay safe.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">8 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
+                </article>
+
+                <!-- First Job -->
+                <article class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" onclick="openArticle('first-job')" style="animation-delay: 0.6s">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-briefcase text-2xl text-teal-500 mr-3"></i>
+                        <span class="bg-teal-100 text-teal-800 text-xs font-semibold px-2 py-1 rounded">Earning</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Your First Job: A Teen\'s Complete Guide</h3>
+                    <p class="text-gray-600 text-sm mb-4">Find, apply for, and succeed at your first job. Resume tips, interview skills, and workplace success.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">10 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
+                </article>
+
+                <!-- Car Buying -->
+                <article class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" onclick="openArticle('car-buying')" style="animation-delay: 0.7s">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-car text-2xl text-blue-500 mr-3"></i>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">Future</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Buying Your First Car: A Teen\'s Guide</h3>
+                    <p class="text-gray-600 text-sm mb-4">Budgeting, insurance, finding the right car, and avoiding common mistakes when buying your first vehicle.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">12 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
+                </article>
+
+                <!-- Tax Guide -->
+                <article class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" onclick="openArticle('tax-guide')" style="animation-delay: 0.8s">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-file-invoice-dollar text-2xl text-green-500 mr-3"></i>
+                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Future</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Teen Tax Guide: What You Need to Know</h3>
+                    <p class="text-gray-600 text-sm mb-4">When to file, what forms you need, and how to handle taxes on your first job and side hustles.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">7 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
                 </article>
             </div>
 

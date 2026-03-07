@@ -38,9 +38,8 @@ let monthlyIncome = parseFloat(localStorage.getItem('monthlyIncome')) || 200; //
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
-    initDarkMode();
     initializeTabs();
-    updateDate();
+    updateDateTime();
     loadDashboard();
     loadExpenses();
     loadBudgets();
@@ -49,6 +48,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize blog functionality
     initializeBlogSearch();
+    
+    // Update time every second
+    setInterval(updateDateTime, 1000);
 });
 
 // Tab navigation
@@ -81,11 +83,75 @@ function initializeTabs() {
     });
 }
 
-// Update current date
-function updateDate() {
+// Update current date and time
+let dateFormat = 'full'; // 'full', 'short', 'numeric'
+let timeFormat = '12'; // '12' or '24'
+
+function updateDateTime() {
     const dateElement = document.getElementById('currentDate');
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    dateElement.textContent = new Date().toLocaleDateString('en-US', options);
+    const timeElement = document.getElementById('currentTime');
+    const now = new Date();
+    
+    // Update date based on format
+    if (dateElement) {
+        let dateText = '';
+        switch(dateFormat) {
+            case 'full':
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                dateText = now.toLocaleDateString('en-US', options);
+                break;
+            case 'short':
+                dateText = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                break;
+            case 'numeric':
+                dateText = now.toLocaleDateString('en-US');
+                break;
+        }
+        dateElement.textContent = dateText;
+    }
+    
+    // Update time based on format
+    if (timeElement) {
+        let timeText = '';
+        if (timeFormat === '12') {
+            timeText = now.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true 
+            });
+        } else {
+            timeText = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false 
+            });
+        }
+        timeElement.textContent = timeText;
+    }
+}
+
+function toggleDateFormat() {
+    const formats = ['full', 'short', 'numeric'];
+    const currentIndex = formats.indexOf(dateFormat);
+    dateFormat = formats[(currentIndex + 1) % formats.length];
+    updateDateTime();
+    
+    // Add a little animation feedback
+    const dateElement = document.getElementById('currentDate');
+    dateElement.classList.add('animate-pulse');
+    setTimeout(() => dateElement.classList.remove('animate-pulse'), 500);
+}
+
+function toggleTimeFormat() {
+    timeFormat = timeFormat === '12' ? '24' : '12';
+    updateDateTime();
+    
+    // Add a little animation feedback
+    const timeElement = document.getElementById('currentTime');
+    timeElement.classList.add('animate-pulse');
+    setTimeout(() => timeElement.classList.remove('animate-pulse'), 500);
 }
 
 // Dashboard functions
@@ -1909,6 +1975,1021 @@ const blogArticles = {
             <p>Scholarships are essentially free money for college, but they require work and strategy. Start early, apply consistently, and don't get discouraged by rejections. Every scholarship you win is money you don't have to borrow or earn.</p>
             
             <p><strong>Remember:</strong> The scholarship search is a marathon, not a sprint. Stay organized, be persistent, and celebrate every win - even the small ones!</p>
+        `
+    },
+    'crypto-basics': {
+        title: 'Cryptocurrency for Teens: What You Need to Know',
+        category: 'investing',
+        readTime: '8 min read',
+        content: `
+            <h2>Crypto Explained for Beginners</h2>
+            <p>Everyone's talking about Bitcoin, Ethereum, and NFTs, but what actually is cryptocurrency? Should teens invest in crypto? Here's what you need to know before jumping in.</p>
+            
+            <h3>🪙 What is Cryptocurrency?</h3>
+            
+            <h4>The Basic Idea</h4>
+            <p>Cryptocurrency is digital money that uses special math (cryptography) to secure transactions. Unlike regular money, it's not controlled by any government or bank.</p>
+            
+            <h4>Key Features</h4>
+            <ul>
+                <li><strong>Decentralized:</strong> No single person or company controls it</li>
+                <li><strong>Digital only:</strong> No physical coins or bills</li>
+                <li><strong>Global:</strong> Can be sent anywhere in the world instantly</li>
+                <li><strong>Limited supply:</strong> Most cryptos have a fixed maximum amount</li>
+            </ul>
+            
+            <h3>📈 Popular Cryptocurrencies</h3>
+            
+            <h4>Bitcoin (BTC)</h4>
+            <ul>
+                <li><strong>The original:</strong> Created in 2009 by someone called Satoshi Nakamoto</li>
+                <li><strong>Digital gold:</strong> Often seen as a store of value</li>
+                <li><strong>Limited supply:</strong> Only 21 million Bitcoin will ever exist</li>
+                <li><strong>Price:</strong> Has gone from pennies to over $60,000 per Bitcoin</li>
+            </ul>
+            
+            <h4>Ethereum (ETH)</h4>
+            <ul>
+                <li><strong>More than money:</strong> Can run smart contracts and apps</li>
+                <li><strong>NFTs:</strong> Most NFTs are built on Ethereum</li>
+                <li><strong>DeFi:</strong> Home to decentralized finance applications</li>
+                <li><strong>Second largest:</strong> After Bitcoin by market value</li>
+            </ul>
+            
+            <h4>Other Popular Ones</h4>
+            <ul>
+                <li><strong>Cardano (ADA):</strong> Focus on sustainability and low fees</li>
+                <li><strong>Solana (SOL):</strong> Very fast and cheap transactions</li>
+                <li><strong>Polkadot (DOT):</strong> Connects different blockchains</li>
+                <li><strong>Dogecoin (DOGE):</strong> Started as a joke, now very popular</li>
+            </ul>
+            
+            <h3>🛒 How to Buy Crypto</h3>
+            
+            <h4>Crypto Exchanges</h4>
+            <p>These are like stock markets for cryptocurrency:</p>
+            <ul>
+                <li><strong>Coinbase:</strong> Most beginner-friendly, good for teens with parental permission</li>
+                <li><strong>Binance:</strong> Largest exchange, lots of options</li>
+                <li><strong>Kraken:</strong> Good security, reputable</li>
+                <li><strong>Robinhood:</strong> Easy if you already use it for stocks</li>
+            </ul>
+            
+            <h4>Step-by-Step Process</h4>
+            <ol>
+                <li><strong>Get parental permission</strong> - Most exchanges require 18+</li>
+                <li><strong>Choose an exchange</strong> - Research fees and security</li>
+                <li><strong>Verify identity</strong> - Usually need ID and sometimes parent's help</li>
+                <li><strong>Add money</strong> - Bank transfer or debit card</li>
+                <li><strong>Buy crypto</strong> - Start with small amounts</li>
+                <li><strong>Store safely</strong> - Keep in secure wallet</li>
+            </ol>
+            
+            <h3>🔒 Keeping Your Crypto Safe</h3>
+            
+            <h4>Hot Wallets (Online)</h4>
+            <ul>
+                <li><strong>Exchange wallets:</strong> Convenient but less secure</li>
+                <li><strong>Software wallets:</strong> Apps on your phone (Trust Wallet, MetaMask)</li>
+                <li><strong>Good for:</strong> Small amounts, frequent trading</li>
+                <li><strong>Risks:</strong> Can be hacked if your phone is compromised</li>
+            </ul>
+            
+            <h4>Cold Wallets (Offline)</h4>
+            <ul>
+                <li><strong>Hardware wallets:</strong> Physical devices (Ledger, Trezor)</li>
+                <li><strong>Paper wallets:</strong> Private keys printed on paper</li>
+                <li><strong>Good for:</strong> Large amounts, long-term storage</li>
+                <li><strong>Pros:</strong> Much more secure, can't be hacked online</li>
+            </ul>
+            
+            <h4>Security Tips</h4>
+            <ul>
+                <li><strong>Never share private keys</strong> - Not with anyone, ever</li>
+                <li><strong>Use two-factor authentication</strong> - On all accounts</li>
+                <li><strong>Watch out for scams</strong> - "Send me crypto and I'll double it"</li>
+                <li><strong>Keep backups</strong> - Write down recovery phrases securely</li>
+                <li><strong>Start small</strong> - Only invest what you can afford to lose</li>
+            </ul>
+            
+            <h3>💰 Should Teens Invest in Crypto?</h3>
+            
+            <h4>The Pros</h4>
+            <ul>
+                <li><strong>High potential returns</strong> - Some cryptos have grown 100x+</li>
+                <li><strong>Learn about technology</strong> - Understanding blockchain is valuable</li>
+                <li><strong>Financial independence</strong> - Control your own money</li>
+                <li><strong>Global access</strong> - Can send money anywhere instantly</li>
+            </ul>
+            
+            <h4>The Cons (Important!)</h4>
+            <ul>
+                <li><strong>Extremely volatile</strong> - Prices can drop 50% in one day</li>
+                <li><strong>No regulations</strong> - If you get scammed, there's no protection</li>
+                <li><strong>Technical complexity</strong> - Easy to make expensive mistakes</li>
+                <li><strong>Age restrictions</strong> - Most platforms require 18+</li>
+            </ul>
+            
+            <h4>Smart Approach for Teens</h4>
+            <ul>
+                <li><strong>Start with education</strong> - Learn before investing</li>
+                <li><strong>Use parental accounts</strong> - With permission and supervision</li>
+                <li><strong>Invest tiny amounts</strong> - $10-50 to start</li>
+                <li><strong>Focus on learning</strong> - Not getting rich quick</li>
+                <li><strong>Never invest more than you can lose</strong> - Seriously</li>
+            </ul>
+            
+            <h3>🎯 Crypto Investment Strategies</h3>
+            
+            <h4>Dollar Cost Averaging</h4>
+            <p>Invest the same amount regularly, regardless of price:</p>
+            <ul>
+                <li><strong>Reduces risk</strong> - Don't try to time the market</li>
+                <li><strong>Builds discipline</strong> - Regular investing habits</li>
+                <li><strong>Example:</strong> $10 every week, no matter the price</li>
+            </ul>
+            
+            <h4>Long-Term Holding</h4>
+            <ul>
+                <li><strong>HODL:</strong> Crypto slang for holding long-term</li>
+                <li><strong>Reduces stress</strong> - Don't panic during price drops</li>
+                <li><strong>Historically works</strong> - Long-term crypto trends are generally up</li>
+            </ul>
+            
+            <h4>Diversification</h4>
+            <ul>
+                <li><strong>Don't go all-in on one crypto</strong> - Spread risk</li>
+                <li><strong>Consider Bitcoin + Ethereum</strong> - As foundation</li>
+                <li><strong>Small positions in others</strong> - For higher risk/reward</li>
+                <li><strong>Balance with traditional investments</strong> - Don't forget stocks</li>
+            </ul>
+            
+            <h3>⚠️ Common Crypto Mistakes</h3>
+            
+            <h4>Beginner Errors</h4>
+            <ul>
+                <li><strong>FOMO buying</strong> - Fear of missing out, buying at the top</li>
+                <li><strong>Panic selling</strong> - Selling during price drops</li>
+                <li><strong>Following hype</strong> - Buying because of social media buzz</li>
+                <li><strong>Ignoring security</strong> - Losing crypto to hacks</li>
+                <li><strong>Investing too much</strong> - More than you can afford to lose</li>
+            </ul>
+            
+            <h4>How to Avoid These</h4>
+            <ul>
+                <li><strong>Have a plan</strong> - Know when to buy and sell</li>
+                <li><strong>Do your own research</strong> - Don't just follow influencers</li>
+                <li><strong>Use proper security</strong> - Two-factor auth, secure wallets</li>
+                <li><strong>Start small</strong> - Learn with small amounts</li>
+                <li><strong>Think long-term</strong> - Don't expect overnight riches</li>
+            </ul>
+            
+            <h3>🔮 The Future of Crypto</h3>
+            
+            <h4>What's Coming</h4>
+            <ul>
+                <li><strong>More adoption</strong> - Companies and countries using crypto</li>
+                <li><strong>Better regulations</strong> - Government rules to protect investors</li>
+                <li><strong>New technology</strong> - Faster, cheaper, more efficient</li>
+                <li><strong>Integration</strong> - Crypto becoming part of everyday life</li>
+            </ul>
+            
+            <h4>Careers in Crypto</h4>
+            <ul>
+                <li><strong>Blockchain developer</strong> - Building crypto applications</li>
+                <li><strong>Crypto analyst</strong> - Researching and analyzing projects</li>
+                <li><strong>Security expert</strong> - Protecting crypto assets</li>
+                <li><strong>Crypto journalist</strong> - Writing about the industry</li>
+            </ul>
+            
+            <h3>🏆 The Bottom Line</h3>
+            <p>Cryptocurrency is exciting technology with huge potential, but it's also very risky. As a teen, focus on learning and investing small amounts you can afford to lose. The knowledge you gain now could be valuable for your future career, regardless of crypto prices.</p>
+            
+            <p><strong>Remember:</strong> Never invest more than you're willing to lose, and always get parental guidance when dealing with money and investments.</p>
+        `
+    },
+    'first-job': {
+        title: 'Your First Job: A Teen\'s Complete Guide',
+        category: 'earning',
+        readTime: '10 min read',
+        content: `
+            <h2>Landing Your First Job</h2>
+            <p>Getting your first job is exciting and nerve-wracking. Whether you're 14 or 17, this guide will help you find, apply for, and succeed at your first job.</p>
+            
+            <h3>🔍 Finding Job Opportunities</h3>
+            
+            <h4>Age-Appropriate Jobs</h4>
+            <ul>
+                <li><strong>Age 14-15:</strong> Babysitting, pet sitting, lawn mowing, retail (limited hours)</li>
+                <li><strong>Age 16-17:</strong> Retail, food service, movie theaters, tutoring, office work</li>
+                <li><strong>Age 18+:</strong> Almost any job, plus tips for younger teens</li>
+            </ul>
+            
+            <h4>Where to Look</h4>
+            <ul>
+                <li><strong>Local businesses</strong> - Restaurants, shops, offices</li>
+                <li><strong>Chain stores</strong> - McDonald's, Target, grocery stores</li>
+                <li><strong>Online job sites</strong> - Indeed, Snagajob (teen-friendly)</li>
+                <li><strong>School resources</strong> - Job board, career counselor</li>
+                <li><strong>Word of mouth</strong> - Tell everyone you're looking</li>
+            </ul>
+            
+            <h4>Hidden Job Market</h4>
+            <ul>
+                <li><strong>Walk in and ask</strong> - Many places hire on the spot</li>
+                <li><strong>Family connections</strong> - Parents' friends, relatives</li>
+                <li><strong>Community events</strong> - Job fairs, local festivals</li>
+                <li><strong>Social media</strong> - Local Facebook groups, Nextdoor</li>
+            </ul>
+            
+            <h3>📝 Creating Your First Resume</h3>
+            
+            <h4>What to Include</h4>
+            <ul>
+                <li><strong>Contact info</strong> - Name, phone, email (professional address)</li>
+                <li><strong>Education</strong> - School name, graduation year, GPA if good</li>
+                <li><strong>Skills</strong> - Computer skills, languages, certifications</li>
+                <li><strong>Experience</strong> - Even volunteer work counts</li>
+                <li><strong>Activities</strong> - Sports, clubs, volunteer work</li>
+            </ul>
+            
+            <h4>No Experience? No Problem!</h4>
+            <ul>
+                <li><strong>School projects</strong> - Leadership, teamwork, deadlines</li>
+                <li><strong>Volunteer work</strong> - Shows responsibility and work ethic</li>
+                <li><strong>Household responsibilities</strong> - Chores show reliability</li>
+                <li><strong>Skills from hobbies</strong> - Gaming (problem-solving), sports (teamwork)</li>
+            </ul>
+            
+            <h4>Resume Tips</h4>
+            <ul>
+                <li><strong>Keep it to one page</strong> - You don't have enough experience for more</li>
+                <li><strong>Use action verbs</strong> - "Led," "Created," "Managed"</li>
+                <li><strong>Quantify when possible</strong> - "Managed 5 kids," "Raised $500"</li>
+                <li><strong>Proofread carefully</strong> - Ask parents or teachers to review</li>
+            </ul>
+            
+            <h3>📋 The Application Process</h3>
+            
+            <h4>Filling Out Applications</h4>
+            <ul>
+                <li><strong>Be honest</strong> - Don't lie about experience or availability</li>
+                <li><strong>Be thorough</strong> - Fill out every section</li>
+                <li><strong>Be neat</strong> - Write clearly or type if possible</li>
+                <li><strong>Follow instructions</strong> - If they say "apply in person," do it</li>
+            </ul>
+            
+            <h4>Getting References</h4>
+            <ul>
+                <li><strong>Teachers</strong> - Most common for teens</li>
+                <li><strong>Coaches</strong> - Show leadership and dedication</li>
+                <li><strong>Volunteer coordinators</strong> - If you've volunteered</li>
+                <li><strong>Family friends</strong> - If they know your work ethic</li>
+                <li><strong>NEVER use parents</strong> - They're biased</li>
+            </ul>
+            
+            <h4>Permission Forms</h4>
+            <ul>
+                <li><strong>Work permits</strong> - Required in some states for under 18</li>
+                <li><strong>Parental consent</strong> - Some jobs need parent signature</li>
+                <li><strong>School forms</strong> - Some schools require approval</li>
+                <li><strong>Check local laws</strong> - Age restrictions vary by state</li>
+            </ul>
+            
+            <h3>🎤 Nailing the Interview</h3>
+            
+            <h4>Before the Interview</h4>
+            <ul>
+                <li><strong>Research the company</strong> - Know what they do</li>
+                <li><strong>Practice common questions</strong> - "Why do you want to work here?"</li>
+                <li><strong>Prepare your own questions</strong> - Shows interest</li>
+                <li><strong>Plan your outfit</strong> - Business casual is usually safe</li>
+                <li><strong>Arrive early</strong> - 10-15 minutes before interview time</li>
+            </ul>
+            
+            <h4>Common Interview Questions</h4>
+            <ul>
+                <li><strong>"Tell me about yourself"</strong> - Keep it 1-2 minutes, focus on strengths</li>
+                <li><strong>"Why do you want this job?"</strong> - Show enthusiasm and research</li>
+                <li><strong>"What are your strengths?"</strong> - Relate to job requirements</li>
+                <li><strong>"What are your weaknesses?"</strong> - Choose something you're improving</li>
+                <li><strong>"When can you work?"</strong> - Be honest about school/sports schedule</li>
+            </ul>
+            
+            <h4>During the Interview</h4>
+            <ul>
+                <li><strong>Make eye contact</strong> - Shows confidence</li>
+                <li><strong>Sit up straight</strong> - Body language matters</li>
+                <li><strong>Speak clearly</strong> - Don't mumble or rush</li>
+                <li><strong>Be enthusiastic</strong> - Show you actually want the job</li>
+                <li><strong>Ask questions</strong> - Shows you're engaged</li>
+            </ul>
+            
+            <h4>After the Interview</h4>
+            <ul>
+                <li><strong>Send thank-you note</strong> - Email or handwritten within 24 hours</li>
+                <li><strong>Be patient</strong> - Don't call every day</li>
+                <li><strong>Follow up once</strong> - If you don't hear back in a week</li>
+                <li><strong>Keep applying</strong> - Don't wait for one response</li>
+            </ul>
+            
+            <h3>💼 Succeeding at Your First Job</h3>
+            
+            <h4>First Week Tips</h4>
+            <ul>
+                <li><strong>Arrive early</strong> - At least 10 minutes before shift</li>
+                <li><strong>Take notes</strong> - Write down procedures and names</li>
+                <li><strong>Ask questions</strong> - Better to ask than to mess up</li>
+                <li><strong>Be friendly</strong> - Introduce yourself to coworkers</li>
+                <li><strong>Stay positive</strong> - Even when tasks are boring</li>
+            </ul>
+            
+            <h4>Building Good Habits</h4>
+            <ul>
+                <li><strong>Be reliable</strong> - Never be late or call in sick unnecessarily</li>
+                <li><strong>Be proactive</strong> - Look for tasks without being asked</li>
+                <li><strong>Be teachable</strong> - Accept feedback gracefully</li>
+                <li><strong>Be professional</strong> - No phone during work, appropriate language</li>
+                <li><strong>Be honest</strong> - Admit mistakes immediately</li>
+            </ul>
+            
+            <h4>Getting Along with Coworkers</h4>
+            <ul>
+                <li><strong>Respect everyone</strong> - Even coworkers younger than you</li>
+                <li><strong>Avoid drama</strong> - Don't gossip or get involved in conflicts</li>
+                <li><strong>Help others</strong> - If you finish your work, offer to help</li>
+                <li><strong>Learn names quickly</strong> - Shows you care about the team</li>
+                <li><strong>Be a good listener</strong> - Experienced workers know things</li>
+            </ul>
+            
+            <h3>💸 Understanding Your Paycheck</h3>
+            
+            <h4>Types of Payment</h4>
+            <ul>
+                <li><strong>Hourly wage</strong> - Most common for teens</li>
+                <li><strong>Salary</strong> - Rare for first jobs</li>
+                <li><strong>Tips</strong> - Restaurant, delivery, service jobs</li>
+                <li><strong>Commission</strong> - Sales jobs, rare for teens</li>
+            </ul>
+            
+            <h4>Understanding Deductions</h4>
+            <ul>
+                <li><strong>Federal taxes</strong> - Usually 10-15% for most teens</li>
+                <li><strong>State taxes</strong> - Varies by state</li>
+                <li><strong>Social Security</strong> - 6.2% (you'll get this back later)</li>
+                <li><strong>Medicare</strong> - 1.45% (healthcare for seniors)</li>
+            </ul>
+            
+            <h4>Direct Deposit vs. Check</h4>
+            <ul>
+                <li><strong>Direct deposit</strong> - Goes straight to bank account</li>
+                <li><strong>Physical check</strong> - You have to deposit it yourself</li>
+                <li><strong>Cash tips</strong> - Take home immediately</li>
+                <li><strong>Pay stub</strong> - Keep for taxes and records</li>
+            </ul>
+            
+            <h3>⚖️ Balancing Work and School</h3>
+            
+            <h4>Time Management</h4>
+            <ul>
+                <li><strong>Prioritize school</strong> - Grades come first</li>
+                <li><strong>Use a calendar</strong> - Track work, homework, activities</li>
+                <li><strong>Study efficiently</strong> - Make the most of study time</li>
+                <li><strong>Get enough sleep</strong> - Don't sacrifice health for work</li>
+                <li><strong>Learn to say no</strong> - Don't overcommit</li>
+            </ul>
+            
+            <h4>Legal Limits</h4>
+            <ul>
+                <li><strong>Age restrictions</strong> - When and how much you can work</li>
+                <li><strong>School night limits</strong> - Usually can't work late on school nights</li>
+                <li><strong>Break requirements</strong> - Must get breaks for longer shifts</li>
+                <li><strong>Forbidden jobs</strong> - Some jobs too dangerous for teens</li>
+                <li><strong>Check your state</strong> - Rules vary significantly</li>
+            </ul>
+            
+            <h3>🚫 Common First Job Mistakes</h3>
+            
+            <h4>What Not to Do</h4>
+            <ul>
+                <li><strong>Calling in sick too often</strong> - Managers notice patterns</li>
+                <li><strong>Being on your phone</strong> - Unless it's work-related</li>
+                <li><strong>Gossiping about coworkers</strong> - Creates toxic environment</li>
+                <li><strong>Arguing with customers</strong> - Stay professional always</li>
+                <li><strong>Not asking for help</strong> - Better to ask than to fail</li>
+            </ul>
+            
+            <h4>How to Recover from Mistakes</h4>
+            <ul>
+                <li><strong>Admit immediately</strong> - Don't try to hide errors</li>
+                <li><strong>Apologize sincerely</strong> - Take responsibility</li>
+                <li><strong>Fix the problem</strong> - Do what you can to make it right</li>
+                <li><strong>Learn from it</strong> - Don't repeat the same mistake</li>
+                <li><strong>Move on</strong> - Don't dwell on past errors</li>
+            </ul>
+            
+            <h3>🏆 Making the Most of Your First Job</h3>
+            
+            <h4>Beyond the Paycheck</h4>
+            <ul>
+                <li><strong>Skills development</strong> - Communication, teamwork, time management</li>
+                <li><strong>Networking</strong> - References and future opportunities</li>
+                <li><strong>Work ethic</strong> - Building habits for future success</li>
+                <li><strong>Financial literacy</strong> - Learning to manage money</li>
+                <li><strong>Career exploration</strong> - Discover what you like/don't like</li>
+            </ul>
+            
+            <h4>Planning for the Future</h4>
+            <ul>
+                <li><strong>Save for goals</strong> - College, car, other big purchases</li>
+                <li><strong>Build resume</strong> - Each job makes you more employable</li>
+                <li><strong>Get recommendations</strong> - Ask managers for LinkedIn recommendations</li>
+                <li><strong>Consider promotions</strong> - Show initiative and ask about advancement</li>
+                <li><strong>Explore careers</strong> - See if you like the industry</li>
+            </ul>
+            
+            <h3>🎓 When to Move On</h3>
+            
+            <h4>Signs It's Time to Leave</h4>
+            <ul>
+                <li><strong>No growth opportunities</strong> - Can't advance or learn new skills</li>
+                <li><strong>Toxic environment</strong> - Bad management or coworkers</li>
+                <li><strong>Better opportunity</strong> - Higher pay or better hours elsewhere</li>
+                <li><strong>Schedule conflicts</strong> - Can't balance with school anymore</li>
+                <li><strong>Found your passion</strong> - Want to try a different field</li>
+            </ul>
+            
+            <h4>How to Quit Professionally</h4>
+            <ul>
+                <li><strong>Give two weeks' notice</strong> - Standard professional courtesy</li>
+                <li><strong>Write a resignation letter</strong> - Simple and professional</li>
+                <li><strong>Offer to train replacement</strong> - Shows responsibility</li>
+                <li><strong>Finish strong</strong> - Work hard until your last day</li>
+                <li><strong>Stay in touch</strong> - Good references are valuable</li>
+            </ul>
+            
+            <h3>🏆 The Bottom Line</h3>
+            <p>Your first job is more than just a paycheck - it's a learning experience that teaches responsibility, time management, and valuable life skills. Focus on doing your best, learning as much as you can, and building relationships that will help you in future careers.</p>
+            
+            <p><strong>Remember:</strong> Everyone starts somewhere. Be patient with yourself, work hard, and your first job will open doors to many opportunities in the future!</p>
+        `
+    },
+    'car-buying': {
+        title: 'Buying Your First Car: A Teen\'s Guide',
+        category: 'future',
+        readTime: '12 min read',
+        content: `
+            <h2>Your First Car: The Complete Guide</h2>
+            <p>Getting your first car is a huge milestone. But between finding the right car, getting insurance, and figuring out payments, it can be overwhelming. Here's everything you need to know about buying your first car as a teen.</p>
+            
+            <h3>💰 How Much Car Can You Afford?</h3>
+            
+            <h4>The 20% Rule</h4>
+            <p>Financial experts recommend spending no more than 20% of your monthly income on car expenses:</p>
+            <ul>
+                <li><strong>Car payment</strong> - If financing</li>
+                <li><strong>Insurance</strong> - Usually $100-300/month for teens</li>
+                <li><strong>Gas</strong> - Depends on driving habits</li>
+                <li><strong>Maintenance</strong> - Budget $50-100/month</li>
+                <li><strong>Registration/taxes</strong> - Annual costs</li>
+            </ul>
+            
+            <h4>Realistic Budget Example</h4>
+            <p>If you earn $500/month from a part-time job:</p>
+            <ul>
+                <li><strong>Maximum car budget:</strong> $100/month (20% of income)</li>
+                <li><strong>Insurance alone:</strong> $150-200/month (often more than the car!)</li>
+                <li><strong>Reality check:</strong> Most teens need parent help with insurance</li>
+            </ul>
+            
+            <h4>Hidden Costs to Consider</h4>
+            <ul>
+                <li><strong>Sales tax</strong> - 6-10% depending on state</li>
+                <li><strong>Registration fees</strong> - $50-200 annually</li>
+                <li><strong>Emissions testing</strong> - $20-50 in some states</li>
+                <li><strong>Initial repairs</strong> - Budget $500-1,000 for used cars</li>
+                <li><strong>Winter tires</strong> - If you live in cold climates</li>
+            </ul>
+            
+            <h3>🚗 New vs. Used Cars</h3>
+            
+            <h4>Used Cars: The Smart Choice for Most Teens</h4>
+            <ul>
+                <li><strong>Lower price</strong> - More car for your money</li>
+                <li><strong>Slower depreciation</strong> - Less value lost over time</li>
+                <li><strong>Lower insurance</strong> - Cheaper to insure</li>
+                <li><strong>Less worry</strong> - First ding isn't as painful</li>
+                <li><strong>More options</strong> - Larger selection in your budget</li>
+            </ul>
+            
+            <h4>When to Consider New</h4>
+                <ul>
+                    <li><strong>Great warranty</strong> - Peace of mind</li>
+                    <li><strong>Latest safety features</strong> - Important for new drivers</li>
+                    <li><strong>Better financing</strong> - Sometimes 0% deals available</li>
+                    <li><strong>Known history</strong> - No previous owners or accidents</li>
+                    <li><strong>Parent help</strong> - If parents are helping significantly</li>
+                </ul>
+            
+            <h4>Best First Cars for Teens</h4>
+            <ul>
+                <li><strong>Honda Civic/Toyota Corolla</strong> - Reliable, good gas mileage</li>
+                <li><strong>Honda Accord/Toyota Camry</strong> - Slightly larger, still reliable</li>
+                <li><strong>Mazda3</strong> - Fun to drive, good safety ratings</li>
+                <li><strong>Subaru Impreza</strong> - All-wheel drive, good safety</li>
+                <li><strong>Ford Focus</strong> - Affordable, decent reliability</li>
+            </ul>
+            
+            <h3>🔍 Finding the Right Car</h3>
+            
+            <h4>Where to Look</h4>
+            <ul>
+                <li><strong>Cars.com, Autotrader</strong> - Largest selection online</li>
+                <li><strong>Craigslist</strong> - Local sellers, good deals, but be careful</li>
+                <li><strong>Facebook Marketplace</strong> - Local, often good prices</li>
+                <li><strong>Used car lots</strong> - Can test drive immediately</li>
+                <li><strong>Family/friends</strong> - Often the best deals</li>
+            </ul>
+            
+            <h4>Red Flags to Avoid</h4>
+            <ul>
+                <li><strong>Too good to be true prices</strong> - Probably scams or major issues</li>
+                <li><strong>Sellers who pressure you</strong> - Take your time deciding</li>
+                <li><strong>No maintenance records</strong> - Could indicate neglect</li>
+                <li><strong>Salvage titles</strong> - Previously totaled cars</li>
+                <li><strong>Multiple owners in short time</strong> - Problem car</li>
+            </ul>
+            
+            <h4>Questions to Ask Sellers</h4>
+            <ul>
+                <li><strong>"Why are you selling?"</strong> - Reveals potential issues</li>
+                <li><strong>"Has it been in any accidents?"</strong> - Check CarFax report</li>
+                <li><strong>"Do you have maintenance records?"</strong> - Shows how well cared for</li>
+                <li><strong>"What work has been done recently?"</strong> - Recent repairs</li>
+                <li><strong>"Are there any issues I should know about?"</strong> - Honesty test</li>
+            </ul>
+            
+            <h3>🔧 Inspecting and Test Driving</h3>
+            
+            <h4>Pre-Purchase Inspection</h4>
+            <ul>
+                <li><strong>Always get a mechanic's inspection</strong> - $100-200 well spent</li>
+                <li><strong>Check CarFax/AutoCheck reports</strong> - Accident history, odometer</li>
+                <li><strong>Look for rust</strong> - Especially in northern states</li>
+                <li><strong>Check fluids</strong> - Oil, coolant, transmission fluid</li>
+                <li><strong>Tire condition</strong> - Even wear, good tread</li>
+            </ul>
+            
+            <h4>Test Drive Checklist</h4>
+            <ul>
+                <li><strong>Drive in different conditions</strong> - City, highway, hills</li>
+                <li><strong>Test all features</strong> - AC, heat, radio, windows</li>
+                <li><strong>Listen for strange noises</strong> - Brakes, engine, suspension</li>
+                <li><strong>Check handling</strong> - Pulling to one side, vibrations</li>
+                <li><strong>Park it</strong> - Test parking, backup camera if equipped</li>
+            </ul>
+            
+            <h4>What to Look For</h4>
+            <ul>
+                <li><strong>Check engine light</strong> - Should be off when running</li>
+                <li><strong>Exhaust smoke</strong> - Blue or white smoke indicates problems</li>
+                <li><strong>Fluid leaks</strong> - Any drips under the car</li>
+                <li><strong>Tire wear</strong> - Uneven wear indicates alignment issues</li>
+                <li><strong>Brake performance</strong> - No squealing or pulling</li>
+            </ul>
+            
+            <h3>💳 Paying for Your Car</h3>
+            
+            <h4>Cash Purchase</h4>
+            <ul>
+                <li><strong>No interest payments</strong> - Save money over time</li>
+                <li><strong>Full ownership immediately</strong> - Can sell anytime</li>
+                <li><strong>Limited options</strong> - Only what you can afford</li>
+                <li><strong>Good discipline</strong> - Forces you to save</li>
+            </ul>
+            
+            <h4>Financing Options</h4>
+            <ul>
+                <li><strong>Bank loan</strong> - Often better rates than dealer financing</li>
+                <li><strong>Credit union</strong> - Usually best rates for members</li>
+                <li><strong>Dealer financing</strong> - Convenient but often more expensive</li>
+                <li><strong>Parent co-signer</strong> - Usually required for teens</li>
+                <li><strong>Down payment</strong> - 20% recommended to avoid being underwater</li>
+            </ul>
+            
+            <h4>Understanding Interest</h4>
+            <ul>
+                <li><strong>Higher rates for teens</strong> - Less credit history = higher risk</li>
+                <li><strong>Shop around</strong> - Don't accept first offer</li>
+                <li><strong>Shorter terms better</strong> - Less total interest paid</li>
+                <li><strong>Read the fine print</strong> - Watch for prepayment penalties</li>
+                <li><strong>Consider total cost</strong> - Not just monthly payment</li>
+            </ul>
+            
+            <h3>🛡️ Car Insurance for Teens</h3>
+            
+            <h4>Why It's So Expensive</h4>
+            <ul>
+                <li><strong>Statistics</strong> - Teens have highest accident rates</li>
+                <li><strong>Inexperience</strong> - New drivers are higher risk</li>
+                <li><strong>Age factor</strong> - Insurance companies charge more for teens</li>
+                <li><strong>Gender</strong> - Males typically pay more than females</li>
+                <li><strong>Location</strong> - Urban areas cost more than rural</li>
+            </ul>
+            
+            <h4>Ways to Save on Insurance</h4>
+            <ul>
+                <li><strong>Good student discount</strong> - 3.0 GPA or higher</li>
+                <li><strong>Driver's ed course</strong> - Shows responsibility</li>
+                <li><strong>Safe car</strong> - Newer cars with safety features</li>
+                <li><strong>Higher deductible</strong> - Lower monthly payments</li>
+                <li><strong>Parent's policy</strong> - Usually cheapest option</li>
+            </ul>
+            
+            <h4>Types of Coverage</h4>
+            <ul>
+                <li><strong>Liability only</strong> - Cheapest, covers damage you cause</li>
+                <li><strong>Collision</strong> - Covers damage to your car</li>
+                <li><strong>Comprehensive</strong> - Theft, vandalism, weather damage</li>
+                <li><strong>Uninsured motorist</strong> - If someone hits you without insurance</li>
+                <li><strong>Full coverage</strong> - All of the above</li>
+            </ul>
+            
+            <h3>📋 Paperwork and Legal Stuff</h3>
+            
+            <h4>Required Documents</h4>
+            <ul>
+                <li><strong>Title</strong> - Proof of ownership</li>
+                <li><strong>Bill of sale</strong> - Receipt of purchase</li>
+                <li><strong>Registration</strong> - Required to drive legally</li>
+                <li><strong>Insurance card</strong> - Must be in car at all times</li>
+                <li><strong>Driver's license</strong> - Obviously!</li>
+            </ul>
+            
+            <h4>Transfer Process</h4>
+            <ul>
+                <li><strong>Sign title over</strong> - Both buyer and seller signatures</li>
+                <li><strong>Get bill of sale</strong> - Protects both parties</li>
+                <li><strong>Register within deadline</strong> - Usually 10-30 days</li>
+                <li><strong>Get new plates</strong> - Or transfer existing plates</li>
+                <li><strong>Pay sales tax</strong> - Usually done during registration</li>
+            </ul>
+            
+            <h4>What NOT to Do</h4>
+            <ul>
+                <li><strong>Don't skip the title transfer</strong> - Illegal and risky</li>
+                <li><strong>Don't drive without insurance</strong> - Huge fines and consequences</li>
+                <li><strong>Don't pay in cash without receipt</strong> - No proof of purchase</li>
+                <li><strong>Don't ignore registration deadlines</strong> - Late fees apply</li>
+                <li><strong>Don't buy "as is" without inspection</strong> - No recourse if problems</li>
+            </ul>
+            
+            <h3>🛠️ Maintaining Your First Car</h3>
+            
+            <h4>Regular Maintenance Schedule</h4>
+            <ul>
+                <li><strong>Oil changes</strong> - Every 3,000-5,000 miles</li>
+                <li><strong>Tire rotation</strong> - Every 6,000-8,000 miles</li>
+                <li><strong>Brake inspection</strong> - Every 12,000 miles</li>
+                <li><strong>Fluid checks</strong> - Monthly</li>
+                <li><strong>Annual inspection</strong> - Required in most states</li>
+            </ul>
+            
+            <h4>Emergency Kit Essentials</h4>
+            <ul>
+                <li><strong>Jumper cables</strong> - Dead batteries happen</li>
+                <li><strong>Spare tire</strong> - And jack to change it</li>
+                <li><strong>Basic tools</strong> - Screwdriver, pliers, wrench</li>
+                <li><strong>Flashlight</strong> - For nighttime issues</li>
+                <li><strong>First aid kit</strong> - Always good to have</li>
+            </ul>
+            
+            <h4>Learning Basic Repairs</h4>
+            <ul>
+                <li><strong>Change a tire</strong> - Essential skill</li>
+                <li><strong>Jump start a battery</strong> - Common issue</li>
+                <li><strong>Check oil level</strong> - Prevent engine damage</li>
+                <li><strong>Replace wipers</strong> - Easy and important</li>
+                <li><strong>Change air filter</strong> - Improves gas mileage</li>
+            </ul>
+            
+            <h3>🚫 Common First Car Mistakes</h3>
+            
+            <h4>Financial Mistakes</h4>
+            <ul>
+                <li><strong>Buying too much car</strong> - Can't afford insurance and maintenance</li>
+                <li><strong>Not budgeting for insurance</strong> - Often costs more than payment</li>
+                <li><strong>Ignoring maintenance</strong> - Leads to expensive repairs</li>
+                <li><strong>Modifying immediately</strong> - Expensive and can void warranty</li>
+                <li><strong>Not shopping insurance rates</strong> - Can save hundreds</li>
+            </ul>
+            
+            <h4>Safety Mistakes</h4>
+            <ul>
+                <li><strong>Distracted driving</strong> - Phones, friends, music</li>
+                <li><strong>Driving too fast</strong> - Speeding tickets are expensive</li>
+                <li><strong>Not wearing seatbelt</strong> - Obvious but crucial</li>
+                <li><strong>Driving with too many friends</strong> - Increases distraction</li>
+                <li><strong>Driving tired or emotional</strong> - Impairs judgment</li>
+            </ul>
+            
+            <h4>Maintenance Mistakes</h4>
+            <ul>
+                <li><strong>Ignoring warning lights</strong> - Check engine means stop driving</li>
+                <li><strong>Skipping oil changes</strong> - Destroys engines</li>
+                <li><strong>Driving on bald tires</strong> - Dangerous and illegal</li>
+                <li><strong>Ignoring strange noises</strong> - Small problems become big ones</li>
+                <li><strong>Not washing car</strong> - Rust and paint damage</li>
+            </ul>
+            
+            <h3>🎓 Building a Good Driving Record</h3>
+            
+            <h4>Why It Matters</h4>
+            <ul>
+                <li><strong>Insurance rates</strong> - Good record = lower premiums</li>
+                <li><strong>Job opportunities</strong> - Some jobs require clean driving record</li>
+                <li><strong>Future car purchases</strong> - Better financing rates</li>
+                <li><strong>Safety</strong> - Most importantly, staying alive</li>
+            </ul>
+            
+            <h4>Tips for Safe Driving</h4>
+            <ul>
+                <li><strong>Follow speed limits</strong> - They exist for a reason</li>
+                <li><strong>No phone while driving</strong> - Not even at red lights</li>
+                <li><strong>Limit passengers</strong> - Many states have teen passenger limits</li>
+                <li><strong>Avoid night driving</strong> - Higher risk for new drivers</li>
+                <li><strong>Take defensive driving</strong> - Can lower insurance rates</li>
+            </ul>
+            
+            <h3>🏆 The Bottom Line</h3>
+            <p>Your first car is a huge responsibility that teaches valuable life lessons about money, maintenance, and safety. Take your time finding the right car, budget for all costs, and prioritize safety over style. The freedom of having your own car is amazing, but it comes with serious responsibilities.</p>
+            
+            <p><strong>Remember:</strong> A reliable, paid-for car is always better than a fancy car with huge payments. Focus on getting something safe and dependable that you can actually afford!</p>
+        `
+    },
+    'tax-guide': {
+        title: 'Teen Tax Guide: What You Need to Know',
+        category: 'future',
+        readTime: '7 min read',
+        content: `
+            <h2>Taxes for Teens: The Complete Guide</h2>
+            <p>Think you're too young to worry about taxes? Think again! If you have a job, earn money from side hustles, or have investment income, you might need to file taxes. Here's everything teens need to know about taxes.</p>
+            
+            <h3>📋 Do I Need to File Taxes?</h3>
+            
+            <h4>General Rules</h4>
+            <p>You need to file if you meet ANY of these conditions:</p>
+            <ul>
+                <li><strong>Earned income over $13,850</strong> (2024 limit for single filers)</li>
+                <li><strong>Unearned income over $1,250</strong> (from investments, savings interest)</li>
+                <li><strong>Self-employment income over $400</strong> - This is important for side hustles!</li>
+                <li><strong>Combined earned and unearned income</strong> over certain thresholds</li>
+                <li><strong>Federal income tax withheld</strong> - You might get a refund!</li>
+            </ul>
+            
+            <h4>Common Teen Scenarios</h4>
+            <ul>
+                <li><strong>Part-time job earning $5,000</strong> - Probably need to file</li>
+                <li><strong>Babysitting earning $2,000</strong> - Need to file if over $400 self-employment</li>
+                <li><strong>Summer job earning $1,500</strong> - Might not need to file, but could get refund</li>
+                <li><strong>Investment income $500</strong> - Probably don't need to file</li>
+                <li><strong>Combined income $3,000</strong> - Need to check specific rules</li>
+            </ul>
+            
+            <h4>When You SHOULD File Even If Not Required</h4>
+            <ul>
+                <li><strong>To get a refund</strong> - If federal tax was withheld from paycheck</li>
+                <li><strong>To claim education credits</strong> - If paying college expenses</li>
+                <li><strong>To establish tax history</strong> - Good for future loans</li>
+                <li><strong>To claim stimulus payments</strong> - If you missed any</li>
+                <li><strong>To claim earned income credit</strong> - If you qualify</li>
+            </ul>
+            
+            <h3>💰 Understanding Different Types of Income</h3>
+            
+            <h4>Earned Income</h4>
+            <ul>
+                <li><strong>Wages from jobs</strong> - Regular employment</li>
+                <li><strong>Self-employment</strong> - Side hustles, freelancing</li>
+                <li><strong>Tips</strong> - If you report them</li>
+                <li><strong>Commissions</strong> - Sales jobs</li>
+                <li><strong>Scholarships for room and board</strong> - Taxable portion</li>
+            </ul>
+            
+            <h4>Unearned Income</h4>
+            <ul>
+                <li><strong>Bank interest</strong> - From savings accounts</li>
+                <li><strong>Investment dividends</strong> - From stocks/ETFs</li>
+                <li><strong>Capital gains</strong> - From selling investments</li>
+                <li><strong>Trust distributions</strong> - From family trusts</li>
+                <li><strong>Gift money</strong> - Generally not taxable to recipient</li>
+            </ul>
+            
+            <h4>Self-Employment Income</h4>
+            <ul>
+                <li><strong>Mowing lawns</strong> - Cash payments</li>
+                <li><strong>Babysitting</strong> - Regular gigs</li>
+                <li><strong>Freelance work</strong> - Design, writing, tutoring</li>
+                <li><strong>Selling crafts</strong> - Online or local</li>
+                <li><strong>Gig economy</strong> - DoorDash, Uber (if 18+)</li>
+            </ul>
+            
+            <h3>📝 Tax Forms You'll Encounter</h3>
+            
+            <h4>W-2: Wage and Tax Statement</h4>
+            <ul>
+                <li><strong>From employers</strong> - By January 31st each year</li>
+                <li><strong>Shows wages earned</strong> - Box 1</li>
+                <li><strong>Federal tax withheld</strong> - Box 2</li>
+                <li><strong>Social Security/Medicare</strong> - Boxes 3-6</li>
+                <li><strong>State tax info</strong> - Boxes 15-17</li>
+            </ul>
+            
+            <h4>1099-INT: Interest Income</h4>
+            <ul>
+                <li><strong>From banks</strong> - If you earned $10+ in interest</li>
+                <li><strong>Shows interest earned</strong> - Box 1</li>
+                <li><strong>Usually for savings accounts</strong> - Or CDs</li>
+            </ul>
+            
+            <h4>1099-MISC: Miscellaneous Income</h4>
+            <ul>
+                <li><strong>From clients</strong> - For freelance work</li>
+                <li><strong>Shows non-employee compensation</strong> - Box 7</li>
+                <li><strong>Common for side hustles</strong> - If paid $600+</li>
+            </ul>
+            
+            <h4>1099-NEC: Nonemployee Compensation</h4>
+            <ul>
+                <li><strong>Newer form</strong> - Separates from 1099-MISC</li>
+                <li><strong>For self-employment</strong> - Independent contractor work</li>
+                <li><strong>Triggers self-employment tax</strong> - Even if under $400</li>
+            </ul>
+            
+            <h3>🧮 Understanding Tax Deductions</h3>
+            
+            <h4>Standard Deduction</h4>
+            <ul>
+                <li><strong>2024 amount:</strong> $14,600 for single filers</li>
+                <li><strong>Most teens take this</strong> - Simpler than itemizing</li>
+                <li><strong>Reduces taxable income</strong> - Dollar for dollar</li>
+                <li><strong>Automatic</strong> - No need to track expenses</li>
+            </ul>
+            
+            <h4>Itemized Deductions</h4>
+            <ul>
+                <li><strong>Must exceed standard deduction</strong> - Rare for teens</li>
+                <li><strong>Medical expenses</strong> - Over 7.5% of AGI</li>
+                <li><strong>State and local taxes</strong> - Up to $10,000</li>
+                <li><strong>Mortgage interest</strong> - Not relevant for most teens</li>
+                <li><strong>Charitable donations</strong> - If you itemize</li>
+            </ul>
+            
+            <h4>Business Expenses</h4>
+            <ul>
+                <li><strong>For self-employment</strong> - Deduct from business income</li>
+                <li><strong>Supplies and materials</strong> - For your side hustle</li>
+                <li><strong>Home office</strong> - If you have dedicated workspace</li>
+                <li><strong>Vehicle expenses</strong> - Mileage for business use</li>
+                <li><strong>Advertising</strong> - Promoting your services</li>
+            </ul>
+            
+            <h3🧾 How to File Your Taxes</h3>
+            
+            <h4>Free Filing Options</h4>
+            <ul>
+                <li><strong>IRS Free File</strong> - If income under $79,000</li>
+                <li><strong>TurboTax Free Edition</strong> - Simple returns only</li>
+                <li><strong>H&R Block Free</strong> - Good for basic returns</li>
+                <li><strong>Cash App Taxes</strong> - Completely free federal and state</li>
+                <li><strong>Local VITA sites</strong> - Free help from volunteers</li>
+            </ul>
+            
+            <h4>What You'll Need</h4>
+            <ul>
+                <li><strong>Social Security number</strong> - Or ITIN if you have one</li>
+                <li><strong>Previous year's return</strong> - If you filed before</li>
+                <li><strong>All income forms</strong> - W-2s, 1099s</li>
+                <li><strong>Records of expenses</strong> - For self-employment</li>
+                <li><strong>Bank account info</strong> - For direct deposit refunds</li>
+            </ul>
+            
+            <h4>Step-by-Step Process</h4>
+            <ol>
+                <li><strong>Gather all documents</strong> - Income forms, expense records</li>
+                <li><strong>Choose filing method</strong> - Software, professional, or paper</li>
+                <li><strong>Fill out personal info</strong> - Name, address, SSN</li>
+                <li><strong>Enter income</strong> - From all your W-2s and 1099s</li>
+                <li><strong>Claim deductions</strong> - Usually standard deduction</li>
+                <li><strong>Calculate taxes</strong> - Software does this automatically</li>
+                <li><strong>File by deadline</strong> - Usually April 15th</li>
+            </ol>
+            
+            <h3>💸 Understanding Self-Employment Tax</h3>
+            
+            <h4>What It Is</h4>
+            <ul>
+                <li><strong>Social Security tax</strong> - 12.4% of net earnings</li>
+                <li><strong>Medicare tax</strong> - 2.9% of net earnings</li>
+                <li><strong>Total: 15.3%</strong> - On self-employment income over $400</li>
+                <li><strong>Employers normally pay half</strong> - Self-employed pay full amount</li>
+            </ul>
+            
+            <h4>How to Calculate</h4>
+            <ul>
+                <li><strong>Net earnings = 92.35%</strong> - Of self-employment income</li>
+                <li><strong>Pay tax on amount over $400</strong> - First $400 is exempt</li>
+                <li><strong>Can deduct half</strong> - As "above-the-line" deduction</li>
+                <li><strong>Example:</strong> $1,000 in freelance work = ~$140 in self-employment tax</li>
+            </ul>
+            
+            <h4>Ways to Reduce It</h4>
+            <ul>
+                <li><strong>Track all expenses</strong> - Reduces net earnings</li>
+                <li><strong>Home office deduction</strong> - If you have dedicated space</li>
+                <li><strong>Retirement contributions</strong> - SEP-IRA for self-employed</li>
+                <li><strong>Health insurance deduction</strong> - If you pay your own</li>
+            </ul>
+            
+            <h3>🎓 Tax Benefits for Students</h3>
+            
+            <h4>American Opportunity Credit</h4>
+            <ul>
+                <li><strong>Up to $2,500 per student</strong> - Per year</li>
+                <li><strong>100% of first $2,000</strong> - In expenses</li>
+                <li><strong>25% of next $2,000</strong> - In expenses</li>
+                <li><strong>40% refundable</strong> - Even if you owe no tax</li>
+                <li><strong>Requirements:</strong> Undergraduate, enrolled at least half-time</li>
+            </ul>
+            
+            <h4>Lifetime Learning Credit</h4>
+            <ul>
+                <li><strong>Up to $2,000 per return</strong> - 20% of first $10,000</li>
+                <li><strong>For any education</strong> - Graduate, professional, or courses</li>
+                <li><strong>No limit on years</strong> - Can claim every year</li>
+                <li><strong>Not refundable</strong> - Can only reduce tax to zero</li>
+            </ul>
+            
+            <h4>Student Loan Interest Deduction</h4>
+            <ul>
+                <li><strong>Up to $2,500</strong> - In interest paid</li>
+                <li><strong>Above-the-line deduction</strong> - Don't need to itemize</li>
+                <li><strong>Income limits apply</strong> - Phaseout starts at $75,000</li>
+                <li><strong>Parents usually claim</strong> - If they paid the interest</li>
+            </ul>
+            
+            <h3>💡 Tax Tips for Teens</h3>
+            
+            <h4>Smart Tax Planning</h4>
+            <ul>
+                <li><strong>Save for taxes</strong> - Set aside 25-30% of self-employment income</li>
+                <li><strong>Track expenses</strong> - Use apps like QuickBooks Self-Employed</li>
+                <li><strong>Make quarterly payments</strong> - If you'll owe $1,000+</li>
+                <li><strong>Contribute to retirement</strong> - Reduces taxable income</li>
+                <li><strong>Keep good records</strong> - For 3 years in case of audit</li>
+            </ul>
+            
+            <h4>Common Mistakes to Avoid</h4>
+            <ul>
+                <li><strong>Not filing when required</strong> - Penalties and interest</li>
+                <li><strong>Forgetting side hustle income</strong> - Common mistake</li>
+                <li><strong>Not tracking expenses</strong> - Overpaying taxes</li>
+                <li><strong>Missing deadlines</strong> - April 15th is usually the deadline</li>
+                <li><strong>Throwing away records</strong> - Keep for 3 years</li>
+            </ul>
+            
+            <h4>Getting Help</h4>
+            <ul>
+                <li><strong>Parents</strong> - Often can help with first return</li>
+                <li><strong>School counselors</strong> - Sometimes offer tax help</li>
+                <li><strong>VITA/TCE sites</strong> - Free tax help for low-income</li>
+                <li><strong>Professional tax preparer</strong> - If situation is complex</li>
+                <li><strong>IRS website</strong> - Lots of free resources</li>
+            </ul>
+            
+            <h3>📊 Tax Planning for the Future</h3>
+            
+            <h4>Building Good Habits</h4>
+            <ul>
+                <li><strong>File every year</strong> - Even if not required</li>
+                <li><strong>Keep organized records</strong> - Digital or paper system</li>
+                <li><strong>Understand your bracket</strong> - Helps with planning</li>
+                <li><strong>Plan for estimated taxes</strong> - If self-employed</li>
+                <li><strong>Stay informed</strong> - Tax laws change regularly</li>
+            </ul>
+            
+            <h4>Tax-Advantaged Accounts</h4>
+            <ul>
+                <li><strong>Roth IRA</strong> - Tax-free growth for teens</li>
+                <li><strong>529 Plan</strong> - Tax-free college savings</li>
+                <li><strong>Health Savings Account</strong> - If you have high-deductible plan</li>
+                <li><strong>SEP-IRA</strong> - For self-employed teens</li>
+            </ul>
+            
+            <h3>🏆 The Bottom Line</h3>
+            <p>Taxes might seem complicated, but understanding them as a teen sets you up for financial success. Start simple, keep good records, and don't be afraid to ask for help. The skills you learn now will help you throughout your life.</p>
+            
+            <p><strong>Remember:</strong> When in doubt, file anyway. You might get a refund, and it's better to file and not owe than to not file and owe with penalties!</p>
         `
     }
 };

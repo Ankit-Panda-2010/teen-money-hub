@@ -13,15 +13,197 @@
         .progress-bar {
             transition: width 0.3s ease-in-out;
         }
+        
+        /* Dark mode styles */
+        .dark-mode {
+            background-color: #1a1a2e;
+            color: #eee;
+        }
+        .dark-mode .bg-white {
+            background-color: #16213e;
+            color: #eee;
+        }
+        .dark-mode .bg-gray-50 {
+            background-color: #0f3460;
+        }
+        .dark-mode .text-gray-500 {
+            color: #aaa;
+        }
+        .dark-mode .text-gray-600 {
+            color: #ccc;
+        }
+        .dark-mode .text-gray-700 {
+            color: #ddd;
+        }
+        .dark-mode .text-gray-800 {
+            color: #fff;
+        }
+        .dark-mode .border {
+            border-color: #444;
+        }
+        .dark-mode .border-b {
+            border-color: #444;
+        }
+        .dark-mode .border-l-4 {
+            border-color: #8b5cf6;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        .animate-fade-in {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .card-hover:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .dark-mode .theme-toggle {
+            background: #2d3748;
+            color: #fbbf24;
+        }
+        
+        /* Enhanced card styles */
+        .enhanced-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .enhanced-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Loading animation */
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+            }
+            
+            .card-hover:hover {
+                transform: none;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Dark Mode Toggle -->
+    <button onclick="toggleDarkMode()" class="theme-toggle" aria-label="Toggle dark mode">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </button>
+
     <!-- Header -->
-    <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg">
+    <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg animate-fade-in">
         <div class="container mx-auto px-4 py-6">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                    <i class="fas fa-wallet text-3xl"></i>
+                    <i class="fas fa-wallet text-3xl hover-scale"></i>
                     <h1 class="text-2xl font-bold">Teen Money Hub</h1>
                 </div>
                 <div class="text-sm">
@@ -58,51 +240,51 @@
         <div id="dashboard" class="tab-content active">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <!-- Summary Cards -->
-                <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-gray-500 text-sm">Total Money</p>
                             <p class="text-2xl font-bold text-gray-800" id="totalBalance">$0.00</p>
                         </div>
-                        <i class="fas fa-dollar-sign text-3xl text-green-500"></i>
+                        <i class="fas fa-dollar-sign text-3xl text-green-500 hover-scale"></i>
                     </div>
                 </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.1s">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-gray-500 text-sm">Monthly Money In</p>
                             <p class="text-2xl font-bold text-gray-800" id="monthlyIncome">$0.00</p>
                         </div>
-                        <i class="fas fa-arrow-up text-3xl text-blue-500"></i>
+                        <i class="fas fa-arrow-up text-3xl text-blue-500 hover-scale"></i>
                     </div>
                 </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.2s">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-gray-500 text-sm">Monthly Spending</p>
                             <p class="text-2xl font-bold text-gray-800" id="monthlyExpenses">$0.00</p>
                         </div>
-                        <i class="fas fa-arrow-down text-3xl text-red-500"></i>
+                        <i class="fas fa-arrow-down text-3xl text-red-500 hover-scale"></i>
                     </div>
                 </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.3s">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-gray-500 text-sm">Money Saved</p>
                             <p class="text-2xl font-bold text-gray-800" id="savingsRate">0%</p>
                         </div>
-                        <i class="fas fa-percentage text-3xl text-purple-500"></i>
+                        <i class="fas fa-percentage text-3xl text-purple-500 hover-scale"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Charts -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.4s">
                     <h3 class="text-lg font-semibold mb-4">Spending Breakdown</h3>
                     <canvas id="expenseChart"></canvas>
                 </div>
-                <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.5s">
                     <h3 class="text-lg font-semibold mb-4">Money Over Time</h3>
                     <canvas id="trendChart"></canvas>
                 </div>
@@ -206,9 +388,6 @@
                 <div class="text-center">
                     <h2 class="text-3xl font-bold mb-2">Teen Money Blog</h2>
                     <p class="text-lg">Learn about money with articles written just for you</p>
-                    <button onclick="console.log('Button clicked!')" class="mt-4 bg-white text-purple-600 px-4 py-2 rounded-lg hover:bg-gray-100">
-                        Test JavaScript
-                    </button>
                 </div>
             </div>
 
@@ -245,88 +424,73 @@
 
             <!-- Article Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                <!-- Investing Article -->
-                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('investing-101')">
+                <!-- College Applications -->
+                <article class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" onclick="openArticle('college-apps')">
                     <div class="flex items-center mb-4">
-                        <i class="fas fa-chart-line text-2xl text-blue-500 mr-3"></i>
-                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">Investing</span>
+                        <i class="fas fa-graduation-cap text-2xl text-red-500 mr-3"></i>
+                        <span class="bg-red-100 text-red-800 text-xs font-semibold px-2 py-1 rounded">Future</span>
                     </div>
-                    <h3 class="text-lg font-semibold mb-2">Investing 101 for Teens</h3>
-                    <p class="text-gray-600 text-sm mb-4">Start investing with as little as $20. Learn the basics of stocks, ETFs, and compound interest.</p>
+                    <h3 class="text-lg font-semibold mb-2">College Applications Without Breaking the Bank</h3>
+                    <p class="text-gray-600 text-sm mb-4">Smart ways to apply to multiple schools without going broke. Fee waivers, free application days, and strategic planning.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">10 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
+                </article>
+
+                <!-- Side Hustles -->
+                <article class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" onclick="openArticle('side-hustles')" style="animation-delay: 0.1s">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-laptop text-2xl text-purple-500 mr-3"></i>
+                        <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">Earning</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Side Hustles That Actually Work for Teens</h3>
+                    <p class="text-gray-600 text-sm mb-4">Make money without traditional jobs. Digital services, local opportunities, and creative ventures that fit your schedule.</p>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-500 text-xs">8 min read</span>
                         <span class="text-blue-600 text-sm font-medium">Read more →</span>
                     </div>
                 </article>
 
-                <!-- Saving Article -->
-                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('saving-hacks')">
+                <!-- Credit Cards -->
+                <article class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.2s">
                     <div class="flex items-center mb-4">
-                        <i class="fas fa-piggy-bank text-2xl text-green-500 mr-3"></i>
-                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Saving</span>
+                        <i class="fas fa-credit-card text-2xl text-indigo-500 mr-3"></i>
+                        <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2 py-1 rounded">Future</span>
                     </div>
-                    <h3 class="text-lg font-semibold mb-2">15 Saving Hacks for Teens</h3>
-                    <p class="text-gray-600 text-sm mb-4">Easy ways to save money without feeling like you're missing out on fun.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-500 text-xs">6 min read</span>
-                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
-                    </div>
-                </article>
-
-                <!-- Earning Article -->
-                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('teen-jobs')">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-money-bill-wave text-2xl text-purple-500 mr-3"></i>
-                        <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">Earning</span>
-                    </div>
-                    <h3 class="text-lg font-semibold mb-2">10 Jobs You Can Get as a Teen</h3>
-                    <p class="text-gray-600 text-sm mb-4">Part-time jobs and side hustles that actually work with your school schedule.</p>
+                    <h3 class="text-lg font-semibold mb-2">Credit Cards for Teens: What You Need to Know</h3>
+                    <p class="text-gray-600 text-sm mb-4">Understanding credit cards before you turn 18. How they work, risks, and how to use them responsibly.</p>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-500 text-xs">7 min read</span>
                         <span class="text-blue-600 text-sm font-medium">Read more →</span>
                     </div>
                 </article>
 
-                <!-- Smart Spending Article -->
-                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('smart-spending')">
+                <!-- Scholarships -->
+                <article class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.3s">
                     <div class="flex items-center mb-4">
-                        <i class="fas fa-shopping-cart text-2xl text-yellow-500 mr-3"></i>
-                        <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">Spending</span>
+                        <i class="fas fa-award text-2xl text-yellow-500 mr-3"></i>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">Future</span>
                     </div>
-                    <h3 class="text-lg font-semibold mb-2">Smart Spending Guide</h3>
-                    <p class="text-gray-600 text-sm mb-4">How to buy the things you want without going broke or asking parents for money.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-500 text-xs">5 min read</span>
-                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
-                    </div>
-                </article>
-
-                <!-- Future Planning Article -->
-                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('future-planning')">
-                    <div class="flex items-center mb-4">
-                        <i class="fas fa-rocket text-2xl text-red-500 mr-3"></i>
-                        <span class="bg-red-100 text-red-800 text-xs font-semibold px-2 py-1 rounded">Future</span>
-                    </div>
-                    <h3 class="text-lg font-semibold mb-2">Planning for College & Cars</h3>
-                    <p class="text-gray-600 text-sm mb-4">How to save for big goals like college, your first car, or moving out.</p>
+                    <h3 class="text-lg font-semibold mb-2">Scholarship Guide: Finding Free Money for College</h3>
+                    <p class="text-gray-600 text-sm mb-4">How to find and win scholarships. Billions available but most go unclaimed each year.</p>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-500 text-xs">9 min read</span>
                         <span class="text-blue-600 text-sm font-medium">Read more →</span>
                     </div>
                 </article>
 
-                <!-- Budgeting Article -->
-                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('teen-budgeting')">
+                <!-- Enhanced Cards -->
+                <article class="enhanced-card rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.4s">
                     <div class="flex items-center mb-4">
-                        <i class="fas fa-calculator text-2xl text-indigo-500 mr-3"></i>
-                        <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2 py-1 rounded">Budgeting</span>
+                        <i class="fas fa-sparkles text-2xl text-white mr-3"></i>
+                        <span class="bg-white bg-opacity-20 text-white text-xs font-semibold px-2 py-1 rounded">Featured</span>
                     </div>
-                    <h3 class="text-lg font-semibold mb-2">Budgeting That Actually Works</h3>
-                    <p class="text-gray-600 text-sm mb-4">Simple budgeting methods that won't make your head hurt or take hours to maintain.</p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-gray-500 text-xs">6 min read</span>
-                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
-                    </div>
+                    <h3 class="text-lg font-bold mb-2">🎯 Featured: Money Tip of the Day</h3>
+                    <p class="text-white text-sm mb-4">Save 10% of everything you get: Whether it's allowance, birthday money, or job earnings - put 10% away before spending anything!</p>
+                    <button onclick="nextTip()" class="bg-white text-purple-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors">
+                        <i class="fas fa-sync-alt mr-2"></i>Next Tip
+                    </button>
                 </article>
             </div>
 

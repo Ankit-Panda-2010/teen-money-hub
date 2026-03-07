@@ -296,11 +296,44 @@
             <!-- Charts -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.4s">
-                    <h3 class="text-lg font-semibold mb-4">Spending Breakdown</h3>
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-chart-pie mr-2 text-purple-500"></i>
+                        Spending Breakdown
+                    </h3>
                     <canvas id="expenseChart"></canvas>
+                    <div id="expenseLegend" class="mt-4 grid grid-cols-2 gap-2 text-sm"></div>
                 </div>
                 <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.5s">
-                    <h3 class="text-lg font-semibold mb-4">Money Over Time</h3>
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-bullseye mr-2 text-green-500"></i>
+                        Savings Goals Progress
+                    </h3>
+                    <canvas id="savingsChart"></canvas>
+                    <div id="savingsLegend" class="mt-4 space-y-2 text-sm"></div>
+                </div>
+            </div>
+
+            <!-- Additional Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.6s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-wallet mr-2 text-blue-500"></i>
+                        Allowance Breakdown
+                    </h3>
+                    <canvas id="allowanceChart"></canvas>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.7s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-shopping-bag mr-2 text-orange-500"></i>
+                        Top Spending Categories
+                    </h3>
+                    <canvas id="topCategoriesChart"></canvas>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.8s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-calendar-alt mr-2 text-indigo-500"></i>
+                        Monthly Trend
+                    </h3>
                     <canvas id="trendChart"></canvas>
                 </div>
             </div>
@@ -311,19 +344,39 @@
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h3 class="text-lg font-semibold mb-4">Add What You Spent</h3>
                 <form id="expenseForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <input type="text" id="expenseDescription" placeholder="What did you buy?" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <input type="number" id="expenseAmount" placeholder="How much?" step="0.01" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <select id="expenseCategory" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                        <option value="">What kind of purchase?</option>
-                        <option value="food">Food & Snacks</option>
-                        <option value="transport">Getting Around</option>
-                        <option value="entertainment">Fun & Games</option>
-                        <option value="shopping">Shopping</option>
-                        <option value="friends">Friends & Gifts</option>
-                        <option value="other">Other Stuff</option>
+                    <input type="text" id="expenseName" placeholder="What did you buy?" required class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="number" id="expenseAmount" placeholder="How much?" step="0.01" required class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="expenseCategory" class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Choose category</option>
+                        <optgroup label="Food & Drinks">
+                            <option value="Food">🍕 Food & Snacks</option>
+                            <option value="Drinks">🥤 Drinks & Coffee</option>
+                            <option value="Restaurant">🍔 Restaurant</option>
+                        </optgroup>
+                        <optgroup label="Shopping">
+                            <option value="Clothes">👕 Clothes & Shoes</option>
+                            <option value="Electronics">📱 Electronics & Games</option>
+                            <option value="Accessories">⌚ Accessories</option>
+                        </optgroup>
+                        <optgroup label="Entertainment">
+                            <option value="Movies">🎬 Movies & Streaming</option>
+                            <option value="Games">🎮 Games & Apps</option>
+                            <option value="Events">🎪 Events & Concerts</option>
+                        </optgroup>
+                        <optgroup label="Transportation">
+                            <option value="Gas">⛽ Gas</option>
+                            <option value="Transit">🚌 Public Transit</option>
+                            <option value="Uber">🚗 Rideshare</option>
+                        </optgroup>
+                        <optgroup label="Other">
+                            <option value="Gifts">🎁 Gifts</option>
+                            <option value="School">📚 School Supplies</option>
+                            <option value="Health">💊 Health & Personal</option>
+                            <option value="Other">📦 Other</option>
+                        </optgroup>
                     </select>
                     <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Add Spending
+                        <i class="fas fa-plus mr-2"></i>Add Expense
                     </button>
                 </form>
             </div>
@@ -381,10 +434,33 @@
             <div class="bg-white rounded-lg shadow-md p-6 mb-6">
                 <h3 class="text-lg font-semibold mb-4">What Are You Saving For?</h3>
                 <form id="goalForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <input type="text" id="goalName" placeholder="Goal name (like 'New Phone')" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <input type="number" id="goalTarget" placeholder="How much you need" step="0.01" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <input type="number" id="goalCurrent" placeholder="How much you have now" step="0.01" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <input type="text" id="goalName" placeholder="What are you saving for?" required class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <input type="number" id="goalTarget" placeholder="Goal amount" step="0.01" required class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select id="goalCategory" class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Choose goal type</option>
+                        <optgroup label="Big Purchases">
+                            <option value="Car">🚗 Car</option>
+                            <option value="Phone">📱 New Phone</option>
+                            <option value="Computer">💻 Computer</option>
+                            <option value="Gaming">🎮 Gaming Console</option>
+                        </optgroup>
+                        <optgroup label="Education">
+                            <option value="College">🎓 College Fund</option>
+                            <option value="Course">📚 Online Course</option>
+                            <option value="Books">📖 Books</option>
+                        </optgroup>
+                        <optgroup label="Experiences">
+                            <option value="Travel">✈️ Travel</option>
+                            <option value="Concert">🎪 Concert/Event</option>
+                            <option value="Trip">🏖️ Trip</option>
+                        </optgroup>
+                        <optgroup label="Personal">
+                            <option value="Emergency">🆘 Emergency Fund</option>
+                            <option value="Gifts">🎁 Gifts</option>
+                            <option value="Other">💰 Other Goal</option>
+                        </optgroup>
+                    </select>
+                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
                         <i class="fas fa-plus mr-2"></i>Add Goal
                     </button>
                 </form>

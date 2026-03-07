@@ -395,18 +395,29 @@ function calculateCategorySpending(category) {
 document.getElementById('goalForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
+    const nameInput = document.getElementById('goalName');
+    const targetInput = document.getElementById('goalTarget');
+    const categorySelect = document.getElementById('goalCategory');
+    
     const goal = {
         id: Date.now(),
-        name: document.getElementById('goalName').value,
-        target: parseFloat(document.getElementById('goalTarget').value),
-        current: parseFloat(document.getElementById('goalCurrent').value)
+        name: nameInput.value,
+        target: parseFloat(targetInput.value),
+        current: 0, // Start at 0 for new goals
+        category: categorySelect.value,
+        createdAt: new Date().toISOString()
     };
     
     goals.push(goal);
     localStorage.setItem('goals', JSON.stringify(goals));
     
-    this.reset();
+    nameInput.value = '';
+    targetInput.value = '';
+    categorySelect.value = '';
+    
     loadGoals();
+    loadDashboard();
+    initializeCharts(); // Refresh charts with new goal
 });
 
 function loadGoals() {
@@ -465,72 +476,327 @@ function updateGoalProgress(goalId) {
 
 function deleteGoal(id) {
     goals = goals.filter(goal => goal.id !== id);
-    localStorage.setItem('goals', JSON.stringify(goals));
-    loadGoals();
 }
-
-// Chart functions
 let expenseChart, trendChart;
 
 function initializeCharts() {
+    // Expense Chart - Pie Chart with Categories
     const expenseCtx = document.getElementById('expenseChart').getContext('2d');
-    const trendCtx = document.getElementById('trendChart').getContext('2d');
+    const categoryTotals = {};
     
-    expenseChart = new Chart(expenseCtx, {
-        type: 'doughnut',
+    expenses.forEach(expense => {
+        if (!categoryTotals[expense.category]) {
+            categoryTotals[expense.category] = 0;
+        }
+        categoryTotals[expense.category] += expense.amount;
+    });
+
+    const categoryColors = {
+        'Food': '#FF6384',
+        'Drinks': '#36A2EB', 
+        'Restaurant': '#FFCE56',
+        'Clothes': '#9966FF',
+        'Electronics': '#FF9F40',
+        'Accessories': '#FF6384',
+        'Movies': '#4BC0C0',
+        'Games': '#9966FF',
+        'Events': '#FF9F40',
+        'Gas': '#FF6384',
+        'Transit': '#36A2EB',
+        'Uber': '#FFCE56',
+        'Gifts': '#9966FF',
+        'School': '#4BC0C0',
+        'Health': '#FF9F40',
+        'Other': '#C9CBCF'
+    };
+
+    // Destroy existing chart if it exists
+    if (window.expenseChartInstance) {
+        window.expenseChartInstance.destroy();
+    }
+
+    window.expenseChartInstance = new Chart(expenseCtx, {
+        type: 'pie',
         data: {
-            labels: [],
+            labels: Object.keys(categoryTotals).map(cat => {
+                const emoji = {
+                    'Food': '🍕', 'Drinks': '🥤', 'Restaurant': '🍔',
+                    'Clothes': '👕', 'Electronics': '📱', 'Accessories': '⌚',
+                    'Movies': '🎬', 'Games': '🎮', 'Events': '🎪',
+                    'Gas': '⛽', 'Transit': '🚌', 'Uber': '🚗',
+                    'Gifts': '🎁', 'School': '📚', 'Health': '💊', 'Other': '📦'
+                }[cat] || '📊';
+                return `${emoji} ${cat}`;
+            }),
             datasets: [{
-                data: [],
-                backgroundColor: [
-                    '#FCD34D', '#60A5FA', '#A78BFA', '#34D399', '#F87171', '#9CA3AF'
-                ]
+                data: Object.values(categoryTotals),
+                backgroundColor: Object.keys(categoryTotals).map(cat => categoryColors[cat] || '#C9CBCF'),
+                borderWidth: 2,
+                borderColor: '#fff'
             }]
         },
         options: {
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = formatCurrency(context.parsed);
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed / total) * 100).toFixed(1);
+                            return `${label}: ${value} (${percentage}%)`;
+                        }
+                    }
                 }
             }
         }
     });
+
+    // Create custom legend
+    const expenseLegend = document.getElementById('expenseLegend');
+    if (expenseLegend) {
+        expenseLegend.innerHTML = '';
+        Object.keys(categoryTotals).forEach(cat => {
+            const percentage = ((categoryTotals[cat] / Object.values(categoryTotals).reduce((a, b) => a + b, 0)) * 100).toFixed(1);
+            const legendItem = document.createElement('div');
+            legendItem.className = 'flex items-center';
+            legendItem.innerHTML = `
+                <div class="w-3 h-3 rounded-full mr-2" style="background-color: ${categoryColors[cat] || '#C9CBCF'}"></div>
+                <span>${cat}: ${percentage}%</span>
+            `;
+            expenseLegend.appendChild(legendItem);
+        });
+    }
+
+    // Savings Goals Chart - Doughnut Chart
+    const savingsCtx = document.getElementById('savingsChart').getContext('2d');
     
-    trendChart = new Chart(trendCtx, {
-        type: 'line',
+    // Destroy existing chart if it exists
+    if (window.savingsChartInstance) {
+        window.savingsChartInstance.destroy();
+    }
+
+    if (goals.length > 0) {
+        window.savingsChartInstance = new Chart(savingsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: goals.map(goal => goal.name),
+                datasets: [{
+                    data: goals.map(goal => goal.current),
+                    backgroundColor: [
+                        '#4BC0C0',
+                        '#9966FF',
+                        '#FF9F40',
+                        '#FF6384',
+                        '#36A2EB'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const goal = goals[context.dataIndex];
+                                const percentage = ((goal.current / goal.target) * 100).toFixed(1);
+                                return `${goal.name}: ${formatCurrency(goal.current)} of ${formatCurrency(goal.target)} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Create savings progress legend
+        const savingsLegend = document.getElementById('savingsLegend');
+        if (savingsLegend) {
+            savingsLegend.innerHTML = '';
+            goals.forEach(goal => {
+                const percentage = Math.min((goal.current / goal.target) * 100, 100);
+                const legendItem = document.createElement('div');
+                legendItem.className = 'flex items-center justify-between';
+                legendItem.innerHTML = `
+                    <span class="flex items-center">
+                        <div class="w-3 h-3 rounded-full mr-2" style="background-color: ${['#4BC0C0', '#9966FF', '#FF9F40', '#FF6384', '#36A2EB'][goals.indexOf(goal)]}"></div>
+                        ${goal.name}
+                    </span>
+                    <span class="font-medium">${percentage.toFixed(1)}%</span>
+                `;
+                savingsLegend.appendChild(legendItem);
+            });
+        }
+    }
+
+    // Allowance Breakdown Chart - Pie Chart
+    const allowanceCtx = document.getElementById('allowanceChart').getContext('2d');
+    const allowanceData = {
+        labels: ['Spent', 'Saved', 'Available'],
+        datasets: [{
+            data: [
+                calculateMonthlyExpenses(),
+                monthlyIncome * 0.2, // Assume 20% savings rate
+                Math.max(0, monthlyIncome - calculateMonthlyExpenses() - (monthlyIncome * 0.2))
+            ],
+            backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0'],
+            borderWidth: 2,
+            borderColor: '#fff'
+        }]
+    };
+
+    // Destroy existing chart if it exists
+    if (window.allowanceChartInstance) {
+        window.allowanceChartInstance.destroy();
+    }
+
+    window.allowanceChartInstance = new Chart(allowanceCtx, {
+        type: 'pie',
+        data: allowanceData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: {
+                            size: 11
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const value = formatCurrency(context.parsed);
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed / total) * 100).toFixed(1);
+                            return `${context.label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Top Categories Chart - Bar Chart
+    const topCategoriesCtx = document.getElementById('topCategoriesChart').getContext('2d');
+    const sortedCategories = Object.entries(categoryTotals)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+    // Destroy existing chart if it exists
+    if (window.topCategoriesChartInstance) {
+        window.topCategoriesChartInstance.destroy();
+    }
+
+    window.topCategoriesChartInstance = new Chart(topCategoriesCtx, {
+        type: 'bar',
         data: {
-            labels: [],
+            labels: sortedCategories.map(([cat]) => cat),
             datasets: [{
-                label: 'Income',
-                data: [],
-                borderColor: '#10B981',
-                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                tension: 0.4
-            }, {
-                label: 'Expenses',
-                data: [],
-                borderColor: '#EF4444',
-                backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                tension: 0.4
+                label: 'Amount',
+                data: sortedCategories.map(([, amount]) => amount),
+                backgroundColor: '#FF9F40',
+                borderColor: '#FF6384',
+                borderWidth: 1
             }]
         },
         options: {
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'bottom'
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return formatCurrency(context.parsed.y);
+                        }
+                    }
                 }
             },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
                 }
             }
         }
     });
+
+    // Monthly Trend Chart - Line Chart
+    const trendCtx = document.getElementById('trendChart').getContext('2d');
+    const last6Months = [];
+    const monthlyData = [];
     
-    updateCharts();
+    for (let i = 5; i >= 0; i--) {
+        const date = new Date();
+        date.setMonth(date.getMonth() - i);
+        const monthName = date.toLocaleDateString('en-US', { month: 'short' });
+        last6Months.push(monthName);
+        
+        // Simulate some trend data (in real app, this would come from actual data)
+        monthlyData.push(Math.floor(Math.random() * 500) + 200);
+    }
+
+    // Destroy existing chart if it exists
+    if (window.trendChartInstance) {
+        window.trendChartInstance.destroy();
+    }
+
+    window.trendChartInstance = new Chart(trendCtx, {
+        type: 'line',
+        data: {
+            labels: last6Months,
+            datasets: [{
+                label: 'Monthly Spending',
+                data: monthlyData,
+                borderColor: '#9966FF',
+                backgroundColor: 'rgba(153, 102, 255, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return formatCurrency(context.parsed.y);
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value;
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 function updateCharts() {

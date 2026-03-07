@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teen Money Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .progress-bar {
+            transition: width 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-wallet text-3xl"></i>
+                    <h1 class="text-2xl font-bold">Teen Money Hub</h1>
+                </div>
+                <div class="text-sm">
+                    <span id="currentDate" class="font-medium"></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Navigation Tabs -->
+        <div class="bg-white rounded-lg shadow-md mb-6">
+            <div class="flex flex-wrap border-b">
+                <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="dashboard">
+                    <i class="fas fa-chart-line mr-2"></i>Dashboard
+                </button>
+                <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="expenses">
+                    <i class="fas fa-shopping-cart mr-2"></i>Spending
+                </button>
+                <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="budget">
+                    <i class="fas fa-wallet mr-2"></i>Allowance
+                </button>
+                <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="goals">
+                    <i class="fas fa-gift mr-2"></i>Savings Goals
+                </button>
+                <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="tips">
+                    <i class="fas fa-graduation-cap mr-2"></i>Money Tips
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Summary Cards -->
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Money</p>
+                            <p class="text-2xl font-bold text-gray-800" id="totalBalance">$0.00</p>
+                        </div>
+                        <i class="fas fa-dollar-sign text-3xl text-green-500"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Monthly Money In</p>
+                            <p class="text-2xl font-bold text-gray-800" id="monthlyIncome">$0.00</p>
+                        </div>
+                        <i class="fas fa-arrow-up text-3xl text-blue-500"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Monthly Spending</p>
+                            <p class="text-2xl font-bold text-gray-800" id="monthlyExpenses">$0.00</p>
+                        </div>
+                        <i class="fas fa-arrow-down text-3xl text-red-500"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Money Saved</p>
+                            <p class="text-2xl font-bold text-gray-800" id="savingsRate">0%</p>
+                        </div>
+                        <i class="fas fa-percentage text-3xl text-purple-500"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold mb-4">Spending Breakdown</h3>
+                    <canvas id="expenseChart"></canvas>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold mb-4">Money Over Time</h3>
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Expenses Tab -->
+        <div id="expenses" class="tab-content">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4">Add What You Spent</h3>
+                <form id="expenseForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <input type="text" id="expenseDescription" placeholder="What did you buy?" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="number" id="expenseAmount" placeholder="How much?" step="0.01" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <select id="expenseCategory" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">What kind of purchase?</option>
+                        <option value="food">Food & Snacks</option>
+                        <option value="transport">Getting Around</option>
+                        <option value="entertainment">Fun & Games</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="friends">Friends & Gifts</option>
+                        <option value="other">Other Stuff</option>
+                    </select>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Add Spending
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold mb-4">Your Recent Spending</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2 px-4">Date</th>
+                                <th class="text-left py-2 px-4">What You Bought</th>
+                                <th class="text-left py-2 px-4">Category</th>
+                                <th class="text-right py-2 px-4">Cost</th>
+                                <th class="text-center py-2 px-4">Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expensesList">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Tab -->
+        <div id="budget" class="tab-content">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4">Set Your Spending Limits</h3>
+                <form id="budgetForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <select id="budgetCategory" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">Pick a category</option>
+                        <option value="food">Food & Snacks</option>
+                        <option value="transport">Getting Around</option>
+                        <option value="entertainment">Fun & Games</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="friends">Friends & Gifts</option>
+                        <option value="other">Other Stuff</option>
+                    </select>
+                    <input type="number" id="budgetAmount" placeholder="Your spending limit" step="0.01" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-save mr-2"></i>Set Limit
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold mb-4">Your Spending Limits</h3>
+                <div id="budgetList" class="space-y-4">
+                </div>
+            </div>
+        </div>
+
+        <!-- Goals Tab -->
+        <div id="goals" class="tab-content">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4">What Are You Saving For?</h3>
+                <form id="goalForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <input type="text" id="goalName" placeholder="Goal name (like 'New Phone')" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="number" id="goalTarget" placeholder="How much you need" step="0.01" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <input type="number" id="goalCurrent" placeholder="How much you have now" step="0.01" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Add Goal
+                    </button>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-lg font-semibold mb-4">Your Savings Goals</h3>
+                <div id="goalsList" class="space-y-4">
+                </div>
+            </div>
+        </div>
+        <!-- Money Blog Tab -->
+        <div id="tips" class="tab-content">
+            <!-- Blog Header -->
+            <div class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg shadow-md p-6 mb-6">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold mb-2">Teen Money Blog</h2>
+                    <p class="text-lg">Learn about money with articles written just for you</p>
+                    <button onclick="console.log('Button clicked!')" class="mt-4 bg-white text-purple-600 px-4 py-2 rounded-lg hover:bg-gray-100">
+                        Test JavaScript
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search and Filter -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <input type="text" id="blogSearch" placeholder="Search articles..." 
+                               class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <select id="blogCategory" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Topics</option>
+                        <option value="investing">Investing</option>
+                        <option value="saving">Saving Money</option>
+                        <option value="earning">Earning Money</option>
+                        <option value="spending">Smart Spending</option>
+                        <option value="future">Future Planning</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Featured Article -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6 border-l-4 border-purple-500">
+                <div class="flex items-center mb-4">
+                    <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-3 py-1 rounded-full mr-3">FEATURED</span>
+                    <span class="text-gray-500 text-sm">5 min read</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-3">Investing for Teens: Your First $100</h3>
+                <p class="text-gray-600 mb-4">Think you're too young to invest? Think again! Learn how to start investing with just $100 and watch your money grow over time.</p>
+                <button onclick="openArticle('investing-101')" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                    Read Full Article →
+                </button>
+            </div>
+
+            <!-- Article Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Investing Article -->
+                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('investing-101')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-chart-line text-2xl text-blue-500 mr-3"></i>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded">Investing</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Investing 101 for Teens</h3>
+                    <p class="text-gray-600 text-sm mb-4">Start investing with as little as $20. Learn the basics of stocks, ETFs, and compound interest.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">8 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
+                </article>
+
+                <!-- Saving Article -->
+                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('saving-hacks')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-piggy-bank text-2xl text-green-500 mr-3"></i>
+                        <span class="bg-green-100 text-green-800 text-xs font-semibold px-2 py-1 rounded">Saving</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">15 Saving Hacks for Teens</h3>
+                    <p class="text-gray-600 text-sm mb-4">Easy ways to save money without feeling like you're missing out on fun.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">6 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
+                </article>
+
+                <!-- Earning Article -->
+                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('teen-jobs')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-money-bill-wave text-2xl text-purple-500 mr-3"></i>
+                        <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-2 py-1 rounded">Earning</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">10 Jobs You Can Get as a Teen</h3>
+                    <p class="text-gray-600 text-sm mb-4">Part-time jobs and side hustles that actually work with your school schedule.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">7 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
+                </article>
+
+                <!-- Smart Spending Article -->
+                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('smart-spending')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-shopping-cart text-2xl text-yellow-500 mr-3"></i>
+                        <span class="bg-yellow-100 text-yellow-800 text-xs font-semibold px-2 py-1 rounded">Spending</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Smart Spending Guide</h3>
+                    <p class="text-gray-600 text-sm mb-4">How to buy the things you want without going broke or asking parents for money.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">5 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
+                </article>
+
+                <!-- Future Planning Article -->
+                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('future-planning')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-rocket text-2xl text-red-500 mr-3"></i>
+                        <span class="bg-red-100 text-red-800 text-xs font-semibold px-2 py-1 rounded">Future</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Planning for College & Cars</h3>
+                    <p class="text-gray-600 text-sm mb-4">How to save for big goals like college, your first car, or moving out.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">9 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
+                </article>
+
+                <!-- Budgeting Article -->
+                <article class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="openArticle('teen-budgeting')">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-calculator text-2xl text-indigo-500 mr-3"></i>
+                        <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2 py-1 rounded">Budgeting</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2">Budgeting That Actually Works</h3>
+                    <p class="text-gray-600 text-sm mb-4">Simple budgeting methods that won't make your head hurt or take hours to maintain.</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs">6 min read</span>
+                        <span class="text-blue-600 text-sm font-medium">Read more →</span>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Article Modal/Reader -->
+            <div id="articleModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+                <div class="bg-white rounded-lg max-w-4xl mx-auto mt-10 p-6 max-h-[80vh] overflow-y-auto">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 id="articleTitle" class="text-2xl font-bold"></h2>
+                        <button onclick="closeArticle()" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div id="articleContent" class="prose max-w-none">
+                        <!-- Article content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

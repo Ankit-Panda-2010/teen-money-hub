@@ -3,17 +3,30 @@
 // Dark mode functionality
 function toggleDarkMode() {
     const body = document.body;
-    const themeIcon = document.getElementById('theme-icon');
+    const themeIconHeader = document.getElementById('theme-icon-header');
+    const themeIconNav = document.getElementById('theme-icon');
     
     body.classList.toggle('dark-mode');
     
     if (body.classList.contains('dark-mode')) {
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
+        if (themeIconHeader) {
+            themeIconHeader.classList.remove('fa-moon');
+            themeIconHeader.classList.add('fa-sun');
+        }
+        if (themeIconNav) {
+            themeIconNav.classList.remove('fa-moon');
+            themeIconNav.classList.add('fa-sun');
+        }
         localStorage.setItem('darkMode', 'true');
     } else {
-        themeIcon.classList.remove('fa-sun');
-        themeIcon.classList.add('fa-moon');
+        if (themeIconHeader) {
+            themeIconHeader.classList.remove('fa-sun');
+            themeIconHeader.classList.add('fa-moon');
+        }
+        if (themeIconNav) {
+            themeIconNav.classList.remove('fa-sun');
+            themeIconNav.classList.add('fa-moon');
+        }
         localStorage.setItem('darkMode', 'false');
     }
 }
@@ -21,12 +34,19 @@ function toggleDarkMode() {
 // Check for saved dark mode preference
 function initDarkMode() {
     const darkMode = localStorage.getItem('darkMode');
-    const themeIcon = document.getElementById('theme-icon');
+    const themeIconHeader = document.getElementById('theme-icon-header');
+    const themeIconNav = document.getElementById('theme-icon');
     
     if (darkMode === 'true') {
         document.body.classList.add('dark-mode');
-        themeIcon.classList.remove('fa-moon');
-        themeIcon.classList.add('fa-sun');
+        if (themeIconHeader) {
+            themeIconHeader.classList.remove('fa-moon');
+            themeIconHeader.classList.add('fa-sun');
+        }
+        if (themeIconNav) {
+            themeIconNav.classList.remove('fa-moon');
+            themeIconNav.classList.add('fa-sun');
+        }
     }
 }
 
@@ -39,6 +59,7 @@ let monthlyIncome = parseFloat(localStorage.getItem('monthlyIncome')) || 200; //
 // Initialize app
 document.addEventListener('DOMContentLoaded', function() {
     initializeTabs();
+    initDarkMode(); // Initialize dark mode
     updateDateTime();
     loadDashboard();
     loadExpenses();
@@ -88,26 +109,32 @@ let dateFormat = 'full'; // 'full', 'short', 'numeric'
 let timeFormat = '12'; // '12' or '24'
 
 function updateDateTime() {
-    const dateElement = document.getElementById('currentDate');
+    const dateElementHeader = document.getElementById('currentDate-header');
+    const dateElementNav = document.getElementById('currentDate');
     const timeElement = document.getElementById('currentTime');
     const now = new Date();
     
     // Update date based on format
-    if (dateElement) {
-        let dateText = '';
-        switch(dateFormat) {
-            case 'full':
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                dateText = now.toLocaleDateString('en-US', options);
-                break;
-            case 'short':
-                dateText = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                break;
-            case 'numeric':
-                dateText = now.toLocaleDateString('en-US');
-                break;
-        }
-        dateElement.textContent = dateText;
+    let dateText = '';
+    switch(dateFormat) {
+        case 'full':
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            dateText = now.toLocaleDateString('en-US', options);
+            break;
+        case 'short':
+            dateText = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            break;
+        case 'numeric':
+            dateText = now.toLocaleDateString('en-US');
+            break;
+    }
+    
+    // Update both date elements
+    if (dateElementHeader) {
+        dateElementHeader.textContent = dateText;
+    }
+    if (dateElementNav) {
+        dateElementNav.textContent = dateText;
     }
     
     // Update time based on format
@@ -139,9 +166,11 @@ function toggleDateFormat() {
     updateDateTime();
     
     // Add a little animation feedback
-    const dateElement = document.getElementById('currentDate');
-    dateElement.classList.add('animate-pulse');
-    setTimeout(() => dateElement.classList.remove('animate-pulse'), 500);
+    const dateElementNav = document.getElementById('currentDate');
+    if (dateElementNav) {
+        dateElementNav.classList.add('animate-pulse');
+        setTimeout(() => dateElementNav.classList.remove('animate-pulse'), 500);
+    }
 }
 
 function toggleTimeFormat() {

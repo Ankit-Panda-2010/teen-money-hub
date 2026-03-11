@@ -300,7 +300,7 @@ document.getElementById('expenseForm').addEventListener('submit', function(e) {
     
     const expense = {
         id: Date.now(),
-        description: document.getElementById('expenseDescription').value,
+        description: document.getElementById('expenseName').value,
         amount: parseFloat(document.getElementById('expenseAmount').value),
         category: document.getElementById('expenseCategory').value,
         date: new Date().toISOString()
@@ -312,7 +312,7 @@ document.getElementById('expenseForm').addEventListener('submit', function(e) {
     this.reset();
     loadExpenses();
     loadDashboard();
-    updateCharts();
+    initializeCharts(); // Use initializeCharts instead of updateCharts
 });
 
 function loadExpenses() {
@@ -323,18 +323,18 @@ function loadExpenses() {
     
     sortedExpenses.slice(-10).reverse().forEach(expense => {
         const row = document.createElement('tr');
-        row.className = 'border-b hover:bg-gray-50';
+        row.className = 'border-b border-white border-opacity-10 hover:bg-white hover:bg-opacity-10 transition-colors';
         row.innerHTML = `
-            <td class="py-2 px-4">${new Date(expense.date).toLocaleDateString()}</td>
-            <td class="py-2 px-4">${expense.description}</td>
-            <td class="py-2 px-4">
-                <span class="px-2 py-1 text-xs rounded-full bg-${getCategoryColor(expense.category)}-100 text-${getCategoryColor(expense.category)}-800">
+            <td class="py-3 px-4 text-white">${new Date(expense.date).toLocaleDateString()}</td>
+            <td class="py-3 px-4 text-white">${expense.description}</td>
+            <td class="py-3 px-4">
+                <span class="px-3 py-1 text-xs rounded-full bg-${getCategoryColor(expense.category)}-500 bg-opacity-20 text-white border border-${getCategoryColor(expense.category)}-400">
                     ${expense.category}
                 </span>
             </td>
-            <td class="py-2 px-4 text-right">${formatCurrency(expense.amount)}</td>
-            <td class="py-2 px-4 text-center">
-                <button onclick="deleteExpense(${expense.id})" class="text-red-600 hover:text-red-800">
+            <td class="py-3 px-4 text-right text-white font-semibold">${formatCurrency(expense.amount)}</td>
+            <td class="py-3 px-4 text-center">
+                <button onclick="deleteExpense(${expense.id})" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500 hover:bg-opacity-20 rounded-lg">
                     <i class="fas fa-trash"></i>
                 </button>
             </td>

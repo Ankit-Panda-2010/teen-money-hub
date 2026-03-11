@@ -14,17 +14,32 @@
             transition: width 0.3s ease-in-out;
         }
         
+        /* Modern CSS Variables */
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --dark-gradient: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --shadow-hard: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
         /* Dark mode styles */
         .dark-mode {
-            background-color: #1a1a2e;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: #eee;
         }
         .dark-mode .bg-white {
-            background-color: #16213e;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
             color: #eee;
         }
         .dark-mode .bg-gray-50 {
-            background-color: #0f3460;
+            background: rgba(15, 52, 96, 0.3);
         }
         .dark-mode .text-gray-500 {
             color: #aaa;
@@ -39,20 +54,35 @@
             color: #fff;
         }
         .dark-mode .border {
-            border-color: #444;
+            border-color: var(--glass-border);
         }
         .dark-mode .border-b {
-            border-color: #444;
+            border-color: var(--glass-border);
         }
         .dark-mode .border-l-4 {
             border-color: #8b5cf6;
         }
         
-        /* Animations */
+        /* Glassmorphism effects */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-soft);
+        }
+        
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow-hard);
+        }
+        
+        /* Enhanced animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -60,10 +90,10 @@
             }
         }
         
-        @keyframes slideIn {
+        @keyframes slideInLeft {
             from {
                 opacity: 0;
-                transform: translateX(-20px);
+                transform: translateX(-50px);
             }
             to {
                 opacity: 1;
@@ -71,78 +101,170 @@
             }
         }
         
-        @keyframes pulse {
-            0%, 100% {
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
                 transform: scale(1);
             }
-            50% {
-                transform: scale(1.05);
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
             }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
         
         .animate-fade-in {
-            animation: fadeInUp 0.5s ease-out;
+            animation: fadeInUp 0.6s ease-out;
         }
         
-        .animate-slide-in {
-            animation: slideIn 0.3s ease-out;
+        .animate-slide-left {
+            animation: slideInLeft 0.5s ease-out;
         }
         
+        .animate-slide-right {
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-slide-down {
+            animation: slideInDown 0.6s ease-out;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .animate-glow {
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        /* Enhanced hover effects */
         .hover-scale {
-            transition: transform 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .hover-scale:hover {
-            transform: scale(1.02);
+            transform: scale(1.05);
+        }
+        
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
         
         .card-hover {
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .card-hover:hover::before {
+            left: 100%;
         }
         
         .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
         }
         
-        .dark-mode .card-hover:hover {
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-        
-        /* Dark mode toggle */
-        .theme-toggle {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: white;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* Modern gradient buttons */
+        .btn-gradient {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
         
-        .theme-toggle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        .btn-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
         }
         
-        .dark-mode .theme-toggle {
-            background: #2d3748;
-            color: #fbbf24;
+        .btn-gradient:hover::before {
+            left: 100%;
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
         }
         
         /* Enhanced card styles */
         .enhanced-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             color: white;
             position: relative;
             overflow: hidden;
+            border-radius: 20px;
         }
         
         .enhanced-card::before {
@@ -156,18 +278,35 @@
             animation: shimmer 3s infinite;
         }
         
-        @keyframes shimmer {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* Modern form inputs */
+        .modern-input {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modern-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .dark-mode .modern-input {
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
         }
         
         /* Loading animation */
         .loading-spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #3498db;
+            border: 3px solid rgba(102, 126, 234, 0.2);
+            border-top: 3px solid #667eea;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
             margin: 20px auto;
         }
@@ -175,6 +314,35 @@
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        /* Background patterns */
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(240, 147, 251, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .dark-mode::before {
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(30, 60, 114, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(42, 82, 152, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(48, 207, 208, 0.2) 0%, transparent 50%);
         }
         
         /* Mobile optimizations */
@@ -187,27 +355,54 @@
             }
             
             .card-hover:hover {
-                transform: none;
+                transform: translateY(-5px);
             }
+            
+            .btn-gradient {
+                padding: 10px 20px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-gradient);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary-gradient);
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body>
     <!-- Dark Mode Toggle -->
-    <button onclick="toggleDarkMode()" class="theme-toggle" aria-label="Toggle dark mode">
+    <button onclick="toggleDarkMode()" class="theme-toggle glass animate-float" aria-label="Toggle dark mode">
         <i class="fas fa-moon" id="theme-icon-header"></i>
     </button>
 
     <!-- Header -->
-    <header class="bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg animate-fade-in">
-        <div class="container mx-auto px-4 py-6">
+    <header class="glass animate-slide-down">
+        <div class="container mx-auto px-6 py-6">
             <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-wallet text-3xl hover-scale"></i>
-                    <h1 class="text-2xl font-bold">Teen Money Hub</h1>
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-600 rounded-xl flex items-center justify-center animate-glow">
+                        <i class="fas fa-wallet text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-white mb-1">Teen Money Hub</h1>
+                        <p class="text-sm opacity-90">Master your finances, build your future</p>
+                    </div>
                 </div>
-                <div class="text-sm">
-                    <span id="currentDate-header" class="font-medium"></span>
+                <div class="text-right">
+                    <div id="currentDate-header" class="text-white font-medium"></div>
                 </div>
             </div>
         </div>
@@ -216,30 +411,30 @@
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8">
         <!-- Navigation Tabs -->
-        <div class="bg-white rounded-lg shadow-md mb-6">
-            <div class="flex items-center space-x-4">
+        <div class="glass rounded-2xl mb-8 animate-scale-in">
+            <div class="flex items-center justify-between p-4">
                 <div class="text-right animate-fade-in">
-                    <div id="currentTime" class="text-2xl font-bold text-gray-800 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onclick="toggleTimeFormat()"></div>
-                    <div id="currentDate" class="text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer" onclick="toggleDateFormat()"></div>
+                    <div id="currentTime" class="text-2xl font-bold text-white hover:text-blue-200 transition-colors cursor-pointer" onclick="toggleTimeFormat()"></div>
+                    <div id="currentDate" class="text-sm text-white opacity-90 hover:text-blue-200 transition-colors cursor-pointer" onclick="toggleDateFormat()"></div>
                 </div>
-                <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors animate-fade-in hover-scale">
-                    <i id="theme-icon" class="fas fa-moon text-gray-600 dark:text-yellow-400"></i>
+                <button onclick="toggleDarkMode()" class="glass p-3 rounded-xl hover-lift">
+                    <i id="theme-icon" class="fas fa-moon text-white"></i>
                 </button>
             </div>
-            <div class="flex flex-wrap border-b">
-                <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="dashboard">
+            <div class="flex flex-wrap border-b border-white border-opacity-20">
+                <button class="tab-btn px-6 py-4 text-white hover:text-blue-200 font-semibold border-b-3 border-transparent hover:border-blue-400 transition-all duration-300 hover-lift" data-tab="dashboard">
                     <i class="fas fa-chart-line mr-2"></i>Dashboard
                 </button>
-                <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="expenses">
+                <button class="tab-btn px-6 py-4 text-white hover:text-blue-200 font-semibold border-b-3 border-transparent hover:border-blue-400 transition-all duration-300 hover-lift" data-tab="expenses">
                     <i class="fas fa-shopping-cart mr-2"></i>Spending
                 </button>
-                <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="budget">
+                <button class="tab-btn px-6 py-4 text-white hover:text-blue-200 font-semibold border-b-3 border-transparent hover:border-blue-400 transition-all duration-300 hover-lift" data-tab="budget">
                     <i class="fas fa-wallet mr-2"></i>Allowance
                 </button>
-                <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="goals">
+                <button class="tab-btn px-6 py-4 text-white hover:text-blue-200 font-semibold border-b-3 border-transparent hover:border-blue-400 transition-all duration-300 hover-lift" data-tab="goals">
                     <i class="fas fa-gift mr-2"></i>Savings Goals
                 </button>
-                <button class="tab-btn px-6 py-3 text-gray-700 hover:text-blue-600 font-medium border-b-2 border-transparent hover:border-blue-600 transition-colors" data-tab="tips">
+                <button class="tab-btn px-6 py-4 text-white hover:text-blue-200 font-semibold border-b-3 border-transparent hover:border-blue-400 transition-all duration-300 hover-lift" data-tab="tips">
                     <i class="fas fa-graduation-cap mr-2"></i>Money Tips
                 </button>
             </div>
@@ -248,90 +443,100 @@
         <!-- Dashboard Tab -->
         <div id="dashboard" class="tab-content active">
             <!-- Summary Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg shadow-md p-6 card-hover animate-fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="glass rounded-2xl p-6 card-hover animate-slide-left">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-blue-100 flex items-center">
+                            <p class="text-white opacity-90 flex items-center mb-2">
                                 Total Balance
-                                <i class="fas fa-edit text-xs ml-2 opacity-70 hover:opacity-100"></i>
+                                <i class="fas fa-edit text-xs ml-2 opacity-70 hover:opacity-100 cursor-pointer" onclick="editValue('totalBalance', 'Total Balance')"></i>
                             </p>
-                            <p id="totalBalance" class="text-3xl font-bold cursor-pointer hover:text-blue-200 transition-colors" onclick="editValue('totalBalance', 'Total Balance')">$0.00</p>
+                            <p id="totalBalance" class="text-3xl font-bold text-white cursor-pointer hover:text-blue-200 transition-colors" onclick="editValue('totalBalance', 'Total Balance')">$0.00</p>
                         </div>
-                        <i class="fas fa-piggy-bank text-4xl text-blue-200"></i>
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center animate-float">
+                            <i class="fas fa-piggy-bank text-white text-2xl"></i>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.1s">
+                <div class="glass rounded-2xl p-6 card-hover animate-scale-in" style="animation-delay: 0.1s">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-green-100 flex items-center">
+                            <p class="text-white opacity-90 flex items-center mb-2">
                                 Monthly Income
-                                <i class="fas fa-edit text-xs ml-2 opacity-70 hover:opacity-100"></i>
+                                <i class="fas fa-edit text-xs ml-2 opacity-70 hover:opacity-100 cursor-pointer" onclick="editValue('monthlyIncome', 'Monthly Income')"></i>
                             </p>
-                            <p id="monthlyIncome" class="text-3xl font-bold cursor-pointer hover:text-green-200 transition-colors" onclick="editValue('monthlyIncome', 'Monthly Income')">$0.00</p>
+                            <p id="monthlyIncome" class="text-3xl font-bold text-white cursor-pointer hover:text-green-200 transition-colors" onclick="editValue('monthlyIncome', 'Monthly Income')">$0.00</p>
                         </div>
-                        <i class="fas fa-dollar-sign text-4xl text-green-200"></i>
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center animate-float" style="animation-delay: 0.2s">
+                            <i class="fas fa-dollar-sign text-white text-2xl"></i>
+                        </div>
                     </div>
                 </div>
-                <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.2s">
+                <div class="glass rounded-2xl p-6 card-hover animate-slide-right" style="animation-delay: 0.2s">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-purple-100">Monthly Expenses</p>
-                            <p id="monthlyExpenses" class="text-3xl font-bold">$0.00</p>
+                            <p class="text-white opacity-90 mb-2">Monthly Expenses</p>
+                            <p id="monthlyExpenses" class="text-3xl font-bold text-white">$0.00</p>
                         </div>
-                        <i class="fas fa-shopping-cart text-4xl text-purple-200"></i>
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center animate-float" style="animation-delay: 0.4s">
+                            <i class="fas fa-shopping-cart text-white text-2xl"></i>
+                        </div>
                     </div>
                 </div>
-            </div>    
-            <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.3s">
+            </div>
+            
+            <!-- Savings Rate Card -->
+            <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.3s">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-gray-500 text-sm">Money Saved</p>
-                        <p class="text-2xl font-bold text-gray-800" id="savingsRate">0%</p>
-                        <i class="fas fa-percentage text-3xl text-purple-500 hover-scale"></i>
+                        <p class="text-white opacity-90 text-sm mb-2">Money Saved</p>
+                        <p class="text-3xl font-bold text-white" id="savingsRate">0%</p>
+                    </div>
+                    <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center animate-glow">
+                        <i class="fas fa-percentage text-white text-2xl"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Charts -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.4s">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center">
-                        <i class="fas fa-chart-pie mr-2 text-purple-500"></i>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.4s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center text-white">
+                        <i class="fas fa-chart-pie mr-2 text-purple-300"></i>
                         Spending Breakdown
                     </h3>
                     <canvas id="expenseChart"></canvas>
-                    <div id="expenseLegend" class="mt-4 grid grid-cols-2 gap-2 text-sm"></div>
+                    <div id="expenseLegend" class="mt-4 grid grid-cols-2 gap-2 text-sm text-white"></div>
                 </div>
-                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.5s">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center">
-                        <i class="fas fa-bullseye mr-2 text-green-500"></i>
+                <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.5s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center text-white">
+                        <i class="fas fa-bullseye mr-2 text-green-300"></i>
                         Savings Goals Progress
                     </h3>
                     <canvas id="savingsChart"></canvas>
-                    <div id="savingsLegend" class="mt-4 space-y-2 text-sm"></div>
+                    <div id="savingsLegend" class="mt-4 space-y-2 text-sm text-white"></div>
                 </div>
             </div>
 
             <!-- Additional Charts -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.6s">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center">
-                        <i class="fas fa-wallet mr-2 text-blue-500"></i>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.6s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center text-white">
+                        <i class="fas fa-wallet mr-2 text-blue-300"></i>
                         Allowance Breakdown
                     </h3>
                     <canvas id="allowanceChart"></canvas>
                 </div>
-                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.7s">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center">
-                        <i class="fas fa-shopping-bag mr-2 text-orange-500"></i>
+                <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.7s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center text-white">
+                        <i class="fas fa-shopping-bag mr-2 text-orange-300"></i>
                         Top Spending Categories
                     </h3>
                     <canvas id="topCategoriesChart"></canvas>
                 </div>
-                <div class="bg-white rounded-lg shadow-md p-6 card-hover animate-fade-in" style="animation-delay: 0.8s">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center">
-                        <i class="fas fa-calendar-alt mr-2 text-indigo-500"></i>
+                <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.8s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center text-white">
+                        <i class="fas fa-calendar-alt mr-2 text-indigo-300"></i>
                         Monthly Trend
                     </h3>
                     <canvas id="trendChart"></canvas>
@@ -341,57 +546,65 @@
 
         <!-- Expenses Tab -->
         <div id="expenses" class="tab-content">
-            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                <h3 class="text-lg font-semibold mb-4">Add What You Spent</h3>
+            <div class="glass rounded-2xl p-6 mb-6 animate-scale-in">
+                <h3 class="text-xl font-bold mb-6 text-white flex items-center">
+                    <i class="fas fa-plus-circle mr-3 text-green-300"></i>
+                    Add What You Spent
+                </h3>
                 <form id="expenseForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <input type="text" id="expenseName" placeholder="What did you buy?" required class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <input type="number" id="expenseAmount" placeholder="How much?" step="0.01" required class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <select id="expenseCategory" class="px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="">Choose category</option>
-                        <optgroup label="Food & Drinks">
-                            <option value="Food">🍕 Food & Snacks</option>
-                            <option value="Drinks">🥤 Drinks & Coffee</option>
-                            <option value="Restaurant">🍔 Restaurant</option>
+                    <input type="text" id="expenseName" placeholder="What did you buy?" required 
+                           class="modern-input text-white placeholder-gray-300">
+                    <input type="number" id="expenseAmount" placeholder="How much?" step="0.01" required 
+                           class="modern-input text-white placeholder-gray-300">
+                    <select id="expenseCategory" class="modern-input text-white">
+                        <option value="" class="bg-gray-800">Choose category</option>
+                        <optgroup label="Food & Drinks" class="bg-gray-800">
+                            <option value="Food" class="bg-gray-800">🍕 Food & Snacks</option>
+                            <option value="Drinks" class="bg-gray-800">🥤 Drinks & Coffee</option>
+                            <option value="Restaurant" class="bg-gray-800">🍔 Restaurant</option>
                         </optgroup>
-                        <optgroup label="Shopping">
-                            <option value="Clothes">👕 Clothes & Shoes</option>
-                            <option value="Electronics">📱 Electronics & Games</option>
-                            <option value="Accessories">⌚ Accessories</option>
+                        <optgroup label="Shopping" class="bg-gray-800">
+                            <option value="Clothes" class="bg-gray-800">👕 Clothes & Shoes</option>
+                            <option value="Electronics" class="bg-gray-800">📱 Electronics & Games</option>
+                            <option value="Accessories" class="bg-gray-800">⌚ Accessories</option>
                         </optgroup>
-                        <optgroup label="Entertainment">
-                            <option value="Movies">🎬 Movies & Streaming</option>
-                            <option value="Games">🎮 Games & Apps</option>
-                            <option value="Events">🎪 Events & Concerts</option>
+                        <optgroup label="Entertainment" class="bg-gray-800">
+                            <option value="Movies" class="bg-gray-800">🎬 Movies & Streaming</option>
+                            <option value="Games" class="bg-gray-800">🎮 Games & Apps</option>
+                            <option value="Events" class="bg-gray-800">🎪 Events & Concerts</option>
                         </optgroup>
-                        <optgroup label="Transportation">
-                            <option value="Gas">⛽ Gas</option>
-                            <option value="Transit">🚌 Public Transit</option>
-                            <option value="Uber">🚗 Rideshare</option>
+                        <optgroup label="Transportation" class="bg-gray-800">
+                            <option value="Gas" class="bg-gray-800">⛽ Gas</option>
+                            <option value="Transit" class="bg-gray-800">🚌 Public Transit</option>
+                            <option value="Uber" class="bg-gray-800">🚗 Rideshare</option>
                         </optgroup>
-                        <optgroup label="Other">
-                            <option value="Gifts">🎁 Gifts</option>
-                            <option value="School">📚 School Supplies</option>
-                            <option value="Health">💊 Health & Personal</option>
-                            <option value="Other">📦 Other</option>
+                        <optgroup label="Other" class="bg-gray-800">
+                            <option value="Gifts" class="bg-gray-800">🎁 Gifts</option>
+                            <option value="School" class="bg-gray-800">📚 School Supplies</option>
+                            <option value="Health" class="bg-gray-800">💊 Health & Personal</option>
+                            <option value="Other" class="bg-gray-800">📦 Other</option>
                         </optgroup>
                     </select>
-                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <button type="submit" class="btn-gradient">
                         <i class="fas fa-plus mr-2"></i>Add Expense
                     </button>
                 </form>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <h3 class="text-lg font-semibold mb-4">Your Recent Spending</h3>
+            <div class="glass rounded-2xl p-6 animate-scale-in" style="animation-delay: 0.1s">
+                <h3 class="text-xl font-bold mb-6 text-white flex items-center">
+                    <i class="fas fa-history mr-3 text-blue-300"></i>
+                    Your Recent Spending
+                </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full table-auto">
                         <thead>
-                            <tr class="border-b">
-                                <th class="text-left py-2 px-4">Date</th>
-                                <th class="text-left py-2 px-4">What You Bought</th>
-                                <th class="text-left py-2 px-4">Category</th>
-                                <th class="text-right py-2 px-4">Cost</th>
-                                <th class="text-center py-2 px-4">Delete</th>
+                            <tr class="border-b border-white border-opacity-20">
+                                <th class="text-left py-3 px-4 text-white font-semibold">Date</th>
+                                <th class="text-left py-3 px-4 text-white font-semibold">What You Bought</th>
+                                <th class="text-left py-3 px-4 text-white font-semibold">Category</th>
+                                <th class="text-right py-3 px-4 text-white font-semibold">Cost</th>
+                                <th class="text-center py-3 px-4 text-white font-semibold">Delete</th>
                             </tr>
                         </thead>
                         <tbody id="expensesList">

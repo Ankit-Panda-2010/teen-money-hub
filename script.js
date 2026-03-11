@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Tab navigation
 function initializeTabs() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabBtns = document.querySelectorAll('.vercel-tab');
     const tabContents = document.querySelectorAll('.tab-content');
 
     tabBtns.forEach(btn => {
@@ -85,11 +85,9 @@ function initializeTabs() {
             
             // Update buttons
             tabBtns.forEach(b => {
-                b.classList.remove('border-blue-600', 'text-blue-600');
-                b.classList.add('border-transparent', 'text-gray-700');
+                b.classList.remove('active');
             });
-            btn.classList.remove('border-transparent', 'text-gray-700');
-            btn.classList.add('border-blue-600', 'text-blue-600');
+            btn.classList.add('active');
             
             // Update content
             tabContents.forEach(content => {
@@ -323,19 +321,19 @@ function loadExpenses() {
     
     sortedExpenses.slice(-10).reverse().forEach(expense => {
         const row = document.createElement('tr');
-        row.className = 'border-b border-white border-opacity-10 hover:bg-white hover:bg-opacity-10 transition-colors';
+        row.className = 'border-b border-gray-100 hover:bg-gray-50 transition-colors';
         row.innerHTML = `
-            <td class="py-3 px-4 text-white">${new Date(expense.date).toLocaleDateString()}</td>
-            <td class="py-3 px-4 text-white">${expense.description}</td>
+            <td class="py-3 px-4 text-gray-900 text-sm">${new Date(expense.date).toLocaleDateString()}</td>
+            <td class="py-3 px-4 text-gray-900 text-sm">${expense.description}</td>
             <td class="py-3 px-4">
-                <span class="px-3 py-1 text-xs rounded-full bg-${getCategoryColor(expense.category)}-500 bg-opacity-20 text-white border border-${getCategoryColor(expense.category)}-400">
+                <span class="px-2 py-1 text-xs rounded-full bg-gray-100 text-gray-700 border border-gray-200">
                     ${expense.category}
                 </span>
             </td>
-            <td class="py-3 px-4 text-right text-white font-semibold">${formatCurrency(expense.amount)}</td>
+            <td class="py-3 px-4 text-right text-gray-900 font-semibold text-sm">${formatCurrency(expense.amount)}</td>
             <td class="py-3 px-4 text-center">
-                <button onclick="deleteExpense(${expense.id})" class="text-red-400 hover:text-red-300 transition-colors p-2 hover:bg-red-500 hover:bg-opacity-20 rounded-lg">
-                    <i class="fas fa-trash"></i>
+                <button onclick="deleteExpense(${expense.id})" class="text-gray-400 hover:text-red-600 transition-colors p-1 hover:bg-red-50 rounded">
+                    <i class="fas fa-trash text-sm"></i>
                 </button>
             </td>
         `;

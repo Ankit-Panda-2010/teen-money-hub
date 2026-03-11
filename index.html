@@ -14,75 +14,76 @@
             transition: width 0.3s ease-in-out;
         }
         
-        /* Modern CSS Variables */
+        /* Vercel-inspired CSS Variables */
         :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-            --dark-gradient: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            --shadow-hard: 0 20px 60px rgba(0, 0, 0, 0.3);
+            --vercel-black: #000000;
+            --vercel-white: #ffffff;
+            --vercel-gray-50: #fafafa;
+            --vercel-gray-100: #f4f4f5;
+            --vercel-gray-200: #e4e4e7;
+            --vercel-gray-300: #d4d4d8;
+            --vercel-gray-400: #a1a1aa;
+            --vercel-gray-500: #71717a;
+            --vercel-gray-600: #52525b;
+            --vercel-gray-700: #3f3f46;
+            --vercel-gray-800: #27272a;
+            --vercel-gray-900: #18181b;
+            --vercel-accent: #0070f3;
+            --vercel-border: #e4e4e7;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        
+        /* Base styles */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: var(--vercel-white);
+            color: var(--vercel-gray-900);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
         
         /* Dark mode styles */
         .dark-mode {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: #eee;
+            background: var(--vercel-black);
+            color: var(--vercel-gray-100);
         }
+        
         .dark-mode .bg-white {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            color: #eee;
+            background: var(--vercel-gray-900);
+            border-color: var(--vercel-gray-800);
         }
-        .dark-mode .bg-gray-50 {
-            background: rgba(15, 52, 96, 0.3);
-        }
-        .dark-mode .text-gray-500 {
-            color: #aaa;
-        }
-        .dark-mode .text-gray-600 {
-            color: #ccc;
-        }
+        
+        .dark-mode .text-gray-500,
+        .dark-mode .text-gray-600,
         .dark-mode .text-gray-700 {
-            color: #ddd;
+            color: var(--vercel-gray-400);
         }
+        
         .dark-mode .text-gray-800 {
-            color: #fff;
+            color: var(--vercel-gray-100);
         }
+        
         .dark-mode .border {
-            border-color: var(--glass-border);
+            border-color: var(--vercel-gray-800);
         }
+        
         .dark-mode .border-b {
-            border-color: var(--glass-border);
-        }
-        .dark-mode .border-l-4 {
-            border-color: #8b5cf6;
+            border-color: var(--vercel-gray-800);
         }
         
-        /* Glassmorphism effects */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-soft);
-        }
-        
-        .glass-dark {
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: var(--shadow-hard);
-        }
-        
-        /* Enhanced animations */
+        /* Vercel-style animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -90,21 +91,10 @@
             }
         }
         
-        @keyframes slideInLeft {
+        @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
+                transform: translateX(-20px);
             }
             to {
                 opacity: 1;
@@ -115,7 +105,7 @@
         @keyframes scaleIn {
             from {
                 opacity: 0;
-                transform: scale(0.8);
+                transform: scale(0.95);
             }
             to {
                 opacity: 1;
@@ -123,190 +113,207 @@
             }
         }
         
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-        
-        @keyframes glow {
-            0%, 100% {
-                box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(102, 126, 234, 0.8);
-            }
-        }
-        
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-        
         .animate-fade-in {
-            animation: fadeInUp 0.6s ease-out;
+            animation: fadeInUp 0.4s ease-out;
         }
         
-        .animate-slide-left {
-            animation: slideInLeft 0.5s ease-out;
+        .animate-slide-in {
+            animation: slideIn 0.3s ease-out;
         }
         
-        .animate-slide-right {
-            animation: slideInRight 0.5s ease-out;
+        .animate-scale-in {
+            animation: scaleIn 0.3s ease-out;
         }
         
-        @keyframes slideInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Vercel-style cards */
+        .vercel-card {
+            background: var(--vercel-white);
+            border: 1px solid var(--vercel-border);
+            border-radius: 8px;
+            transition: all 0.15s ease;
         }
         
-        .animate-slide-down {
-            animation: slideInDown 0.6s ease-out;
+        .vercel-card:hover {
+            border-color: var(--vercel-gray-300);
+            box-shadow: var(--shadow-md);
         }
         
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
+        .dark-mode .vercel-card {
+            background: var(--vercel-gray-900);
+            border-color: var(--vercel-gray-800);
         }
         
-        .animate-glow {
-            animation: glow 2s ease-in-out infinite;
+        .dark-mode .vercel-card:hover {
+            border-color: var(--vercel-gray-700);
         }
         
-        /* Enhanced hover effects */
-        .hover-scale {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Vercel-style buttons */
+        .vercel-btn {
+            background: var(--vercel-black);
+            color: var(--vercel-white);
+            border: 1px solid var(--vercel-gray-200);
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .hover-scale:hover {
-            transform: scale(1.05);
+        .vercel-btn:hover {
+            background: var(--vercel-gray-100);
+            border-color: var(--vercel-gray-300);
         }
         
+        .vercel-btn-primary {
+            background: var(--vercel-black);
+            color: var(--vercel-white);
+            border: 1px solid var(--vercel-black);
+        }
+        
+        .vercel-btn-primary:hover {
+            background: var(--vercel-gray-800);
+            border-color: var(--vercel-gray-800);
+        }
+        
+        .dark-mode .vercel-btn {
+            background: var(--vercel-white);
+            color: var(--vercel-black);
+            border-color: var(--vercel-gray-700);
+        }
+        
+        .dark-mode .vercel-btn:hover {
+            background: var(--vercel-gray-100);
+            border-color: var(--vercel-gray-600);
+        }
+        
+        .dark-mode .vercel-btn-primary {
+            background: var(--vercel-white);
+            color: var(--vercel-black);
+            border-color: var(--vercel-white);
+        }
+        
+        .dark-mode .vercel-btn-primary:hover {
+            background: var(--vercel-gray-100);
+            border-color: var(--vercel-gray-100);
+        }
+        
+        /* Vercel-style inputs */
+        .vercel-input {
+            background: var(--vercel-white);
+            border: 1px solid var(--vercel-gray-300);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 14px;
+            transition: all 0.15s ease;
+            width: 100%;
+        }
+        
+        .vercel-input:focus {
+            outline: none;
+            border-color: var(--vercel-accent);
+            box-shadow: 0 0 0 3px rgb(0 112 243 / 0.1);
+        }
+        
+        .dark-mode .vercel-input {
+            background: var(--vercel-gray-800);
+            border-color: var(--vercel-gray-700);
+            color: var(--vercel-gray-100);
+        }
+        
+        .dark-mode .vercel-input:focus {
+            border-color: var(--vercel-accent);
+            box-shadow: 0 0 0 3px rgb(0 112 243 / 0.2);
+        }
+        
+        /* Vercel-style tabs */
+        .vercel-tab {
+            background: none;
+            border: none;
+            color: var(--vercel-gray-600);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .vercel-tab:hover {
+            color: var(--vercel-gray-900);
+        }
+        
+        .vercel-tab.active {
+            color: var(--vercel-black);
+            border-bottom-color: var(--vercel-black);
+        }
+        
+        .dark-mode .vercel-tab {
+            color: var(--vercel-gray-400);
+        }
+        
+        .dark-mode .vercel-tab:hover {
+            color: var(--vercel-gray-200);
+        }
+        
+        .dark-mode .vercel-tab.active {
+            color: var(--vercel-white);
+            border-bottom-color: var(--vercel-white);
+        }
+        
+        /* Hover effects */
         .hover-lift {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
         
         .hover-lift:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-        
-        .card-hover {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .card-hover::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .card-hover:hover::before {
-            left: 100%;
-        }
-        
-        .card-hover:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-        }
-        
-        /* Modern gradient buttons */
-        .btn-gradient {
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 12px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .btn-gradient::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-        
-        .btn-gradient:hover::before {
-            left: 100%;
-        }
-        
-        .btn-gradient:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: var(--shadow-lg);
         }
         
-        /* Enhanced card styles */
-        .enhanced-card {
-            background: var(--primary-gradient);
-            color: white;
-            position: relative;
-            overflow: hidden;
-            border-radius: 20px;
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 1000;
+            background: var(--vercel-white);
+            border: 1px solid var(--vercel-gray-200);
+            border-radius: 8px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            box-shadow: var(--shadow-sm);
         }
         
-        .enhanced-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: shimmer 3s infinite;
+        .theme-toggle:hover {
+            border-color: var(--vercel-gray-300);
+            box-shadow: var(--shadow-md);
         }
         
-        /* Modern form inputs */
-        .modern-input {
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid transparent;
-            border-radius: 12px;
-            padding: 12px 16px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+        .dark-mode .theme-toggle {
+            background: var(--vercel-gray-900);
+            border-color: var(--vercel-gray-700);
         }
         
-        .modern-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            transform: translateY(-2px);
-        }
-        
-        .dark-mode .modern-input {
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
+        .dark-mode .theme-toggle:hover {
+            border-color: var(--vercel-gray-600);
         }
         
         /* Loading animation */
         .loading-spinner {
-            border: 3px solid rgba(102, 126, 234, 0.2);
-            border-top: 3px solid #667eea;
+            border: 2px solid var(--vercel-gray-200);
+            border-top: 2px solid var(--vercel-gray-600);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 24px;
+            height: 24px;
             animation: spin 1s linear infinite;
             margin: 20px auto;
         }
@@ -316,125 +323,100 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Background patterns */
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            position: relative;
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
         
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(240, 147, 251, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
+        ::-webkit-scrollbar-track {
+            background: var(--vercel-gray-50);
         }
         
-        .dark-mode::before {
-            background-image: 
-                radial-gradient(circle at 20% 80%, rgba(30, 60, 114, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(42, 82, 152, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(48, 207, 208, 0.2) 0%, transparent 50%);
+        ::-webkit-scrollbar-thumb {
+            background: var(--vercel-gray-300);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--vercel-gray-400);
+        }
+        
+        .dark-mode ::-webkit-scrollbar-track {
+            background: var(--vercel-gray-900);
+        }
+        
+        .dark-mode ::-webkit-scrollbar-thumb {
+            background: var(--vercel-gray-700);
+        }
+        
+        .dark-mode ::-webkit-scrollbar-thumb:hover {
+            background: var(--vercel-gray-600);
         }
         
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .theme-toggle {
-                top: 10px;
-                right: 10px;
+                top: 16px;
+                right: 16px;
                 width: 40px;
                 height: 40px;
             }
-            
-            .card-hover:hover {
-                transform: translateY(-5px);
-            }
-            
-            .btn-gradient {
-                padding: 10px 20px;
-            }
-        }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: var(--primary-gradient);
-            border-radius: 5px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--secondary-gradient);
         }
     </style>
 </head>
 <body>
     <!-- Dark Mode Toggle -->
-    <button onclick="toggleDarkMode()" class="theme-toggle glass animate-float" aria-label="Toggle dark mode">
+    <button onclick="toggleDarkMode()" class="theme-toggle" aria-label="Toggle dark mode">
         <i class="fas fa-moon" id="theme-icon-header"></i>
     </button>
 
     <!-- Header -->
-    <header class="glass animate-slide-down">
-        <div class="container mx-auto px-6 py-6">
+    <header class="animate-fade-in">
+        <div class="max-w-7xl mx-auto px-6 py-8">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-600 rounded-xl flex items-center justify-center animate-glow">
-                        <i class="fas fa-wallet text-white text-xl"></i>
+                    <div class="w-10 h-10 bg-black rounded-md flex items-center justify-center">
+                        <i class="fas fa-wallet text-white text-lg"></i>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-bold text-white mb-1">Teen Money Hub</h1>
-                        <p class="text-sm opacity-90">Master your finances, build your future</p>
+                        <h1 class="text-2xl font-bold text-gray-900">Teen Money Hub</h1>
+                        <p class="text-sm text-gray-600">Master your finances, build your future</p>
                     </div>
                 </div>
                 <div class="text-right">
-                    <div id="currentDate-header" class="text-white font-medium"></div>
+                    <div id="currentDate-header" class="text-sm text-gray-600"></div>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
+    <main class="max-w-7xl mx-auto px-6 py-8">
         <!-- Navigation Tabs -->
-        <div class="glass rounded-2xl mb-8 animate-scale-in">
-            <div class="flex items-center justify-between p-4">
-                <div class="text-right animate-fade-in">
-                    <div id="currentTime" class="text-2xl font-bold text-white hover:text-blue-200 transition-colors cursor-pointer" onclick="toggleTimeFormat()"></div>
-                    <div id="currentDate" class="text-sm text-white opacity-90 hover:text-blue-200 transition-colors cursor-pointer" onclick="toggleDateFormat()"></div>
+        <div class="vercel-card mb-8 animate-scale-in">
+            <div class="flex items-center justify-between p-4 border-b border-gray-200">
+                <div class="text-right">
+                    <div id="currentTime" class="text-lg font-semibold text-gray-900 hover:text-gray-700 transition-colors cursor-pointer" onclick="toggleTimeFormat()"></div>
+                    <div id="currentDate" class="text-sm text-gray-600 hover:text-gray-700 transition-colors cursor-pointer" onclick="toggleDateFormat()"></div>
                 </div>
-                <button onclick="toggleDarkMode()" class="glass p-3 rounded-xl hover-lift">
-                    <i id="theme-icon" class="fas fa-moon text-white"></i>
+                <button onclick="toggleDarkMode()" class="vercel-btn p-2">
+                    <i id="theme-icon" class="fas fa-moon"></i>
                 </button>
             </div>
-            <div class="flex flex-wrap border-b border-white border-opacity-20">
-                <button class="tab-btn px-6 py-4 text-white hover:text-blue-200 font-semibold border-b-3 border-transparent hover:border-blue-400 transition-all duration-300 hover-lift" data-tab="dashboard">
+            <div class="flex space-x-8 px-6">
+                <button class="vercel-tab active" data-tab="dashboard">
                     <i class="fas fa-chart-line mr-2"></i>Dashboard
                 </button>
-                <button class="tab-btn px-6 py-4 text-white hover:text-blue-200 font-semibold border-b-3 border-transparent hover:border-blue-400 transition-all duration-300 hover-lift" data-tab="expenses">
+                <button class="vercel-tab" data-tab="expenses">
                     <i class="fas fa-shopping-cart mr-2"></i>Spending
                 </button>
-                <button class="tab-btn px-6 py-4 text-white hover:text-blue-200 font-semibold border-b-3 border-transparent hover:border-blue-400 transition-all duration-300 hover-lift" data-tab="budget">
+                <button class="vercel-tab" data-tab="budget">
                     <i class="fas fa-wallet mr-2"></i>Allowance
                 </button>
-                <button class="tab-btn px-6 py-4 text-white hover:text-blue-200 font-semibold border-b-3 border-transparent hover:border-blue-400 transition-all duration-300 hover-lift" data-tab="goals">
+                <button class="vercel-tab" data-tab="goals">
                     <i class="fas fa-gift mr-2"></i>Savings Goals
                 </button>
-                <button class="tab-btn px-6 py-4 text-white hover:text-blue-200 font-semibold border-b-3 border-transparent hover:border-blue-400 transition-all duration-300 hover-lift" data-tab="tips">
+                <button class="vercel-tab" data-tab="tips">
                     <i class="fas fa-graduation-cap mr-2"></i>Money Tips
                 </button>
             </div>
@@ -444,99 +426,99 @@
         <div id="dashboard" class="tab-content active">
             <!-- Summary Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="glass rounded-2xl p-6 card-hover animate-slide-left">
+                <div class="vercel-card p-6 hover-lift animate-fade-in">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-white opacity-90 flex items-center mb-2">
+                            <p class="text-sm text-gray-600 mb-1 flex items-center">
                                 Total Balance
-                                <i class="fas fa-edit text-xs ml-2 opacity-70 hover:opacity-100 cursor-pointer" onclick="editValue('totalBalance', 'Total Balance')"></i>
+                                <i class="fas fa-edit text-xs ml-2 text-gray-400 hover:text-gray-600 cursor-pointer" onclick="editValue('totalBalance', 'Total Balance')"></i>
                             </p>
-                            <p id="totalBalance" class="text-3xl font-bold text-white cursor-pointer hover:text-blue-200 transition-colors" onclick="editValue('totalBalance', 'Total Balance')">$0.00</p>
+                            <p id="totalBalance" class="text-2xl font-bold text-gray-900 cursor-pointer hover:text-gray-700 transition-colors" onclick="editValue('totalBalance', 'Total Balance')">$0.00</p>
                         </div>
-                        <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center animate-float">
-                            <i class="fas fa-piggy-bank text-white text-2xl"></i>
+                        <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-piggy-bank text-blue-600 text-lg"></i>
                         </div>
                     </div>
                 </div>
-                <div class="glass rounded-2xl p-6 card-hover animate-scale-in" style="animation-delay: 0.1s">
+                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.1s">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-white opacity-90 flex items-center mb-2">
+                            <p class="text-sm text-gray-600 mb-1 flex items-center">
                                 Monthly Income
-                                <i class="fas fa-edit text-xs ml-2 opacity-70 hover:opacity-100 cursor-pointer" onclick="editValue('monthlyIncome', 'Monthly Income')"></i>
+                                <i class="fas fa-edit text-xs ml-2 text-gray-400 hover:text-gray-600 cursor-pointer" onclick="editValue('monthlyIncome', 'Monthly Income')"></i>
                             </p>
-                            <p id="monthlyIncome" class="text-3xl font-bold text-white cursor-pointer hover:text-green-200 transition-colors" onclick="editValue('monthlyIncome', 'Monthly Income')">$0.00</p>
+                            <p id="monthlyIncome" class="text-2xl font-bold text-gray-900 cursor-pointer hover:text-gray-700 transition-colors" onclick="editValue('monthlyIncome', 'Monthly Income')">$0.00</p>
                         </div>
-                        <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center animate-float" style="animation-delay: 0.2s">
-                            <i class="fas fa-dollar-sign text-white text-2xl"></i>
+                        <div class="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-dollar-sign text-green-600 text-lg"></i>
                         </div>
                     </div>
                 </div>
-                <div class="glass rounded-2xl p-6 card-hover animate-slide-right" style="animation-delay: 0.2s">
+                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.2s">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-white opacity-90 mb-2">Monthly Expenses</p>
-                            <p id="monthlyExpenses" class="text-3xl font-bold text-white">$0.00</p>
+                            <p class="text-sm text-gray-600 mb-1">Monthly Expenses</p>
+                            <p id="monthlyExpenses" class="text-2xl font-bold text-gray-900">$0.00</p>
                         </div>
-                        <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center animate-float" style="animation-delay: 0.4s">
-                            <i class="fas fa-shopping-cart text-white text-2xl"></i>
+                        <div class="w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-shopping-cart text-purple-600 text-lg"></i>
                         </div>
                     </div>
                 </div>
             </div>
             
             <!-- Savings Rate Card -->
-            <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.3s">
+            <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.3s">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-white opacity-90 text-sm mb-2">Money Saved</p>
-                        <p class="text-3xl font-bold text-white" id="savingsRate">0%</p>
+                        <p class="text-sm text-gray-600 mb-1">Money Saved</p>
+                        <p class="text-2xl font-bold text-gray-900" id="savingsRate">0%</p>
                     </div>
-                    <div class="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center animate-glow">
-                        <i class="fas fa-percentage text-white text-2xl"></i>
+                    <div class="w-12 h-12 bg-yellow-50 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-percentage text-yellow-600 text-lg"></i>
                     </div>
                 </div>
             </div>
 
             <!-- Charts -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.4s">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center text-white">
-                        <i class="fas fa-chart-pie mr-2 text-purple-300"></i>
+                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.4s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-900">
+                        <i class="fas fa-chart-pie mr-2 text-purple-600"></i>
                         Spending Breakdown
                     </h3>
                     <canvas id="expenseChart"></canvas>
-                    <div id="expenseLegend" class="mt-4 grid grid-cols-2 gap-2 text-sm text-white"></div>
+                    <div id="expenseLegend" class="mt-4 grid grid-cols-2 gap-2 text-sm text-gray-600"></div>
                 </div>
-                <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.5s">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center text-white">
-                        <i class="fas fa-bullseye mr-2 text-green-300"></i>
+                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.5s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-900">
+                        <i class="fas fa-bullseye mr-2 text-green-600"></i>
                         Savings Goals Progress
                     </h3>
                     <canvas id="savingsChart"></canvas>
-                    <div id="savingsLegend" class="mt-4 space-y-2 text-sm text-white"></div>
+                    <div id="savingsLegend" class="mt-4 space-y-2 text-sm text-gray-600"></div>
                 </div>
             </div>
 
             <!-- Additional Charts -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.6s">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center text-white">
-                        <i class="fas fa-wallet mr-2 text-blue-300"></i>
+                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.6s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-900">
+                        <i class="fas fa-wallet mr-2 text-blue-600"></i>
                         Allowance Breakdown
                     </h3>
                     <canvas id="allowanceChart"></canvas>
                 </div>
-                <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.7s">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center text-white">
-                        <i class="fas fa-shopping-bag mr-2 text-orange-300"></i>
+                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.7s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-900">
+                        <i class="fas fa-shopping-bag mr-2 text-orange-600"></i>
                         Top Spending Categories
                     </h3>
                     <canvas id="topCategoriesChart"></canvas>
                 </div>
-                <div class="glass rounded-2xl p-6 card-hover animate-fade-in" style="animation-delay: 0.8s">
-                    <h3 class="text-lg font-semibold mb-4 flex items-center text-white">
-                        <i class="fas fa-calendar-alt mr-2 text-indigo-300"></i>
+                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.8s">
+                    <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-900">
+                        <i class="fas fa-calendar-alt mr-2 text-indigo-600"></i>
                         Monthly Trend
                     </h3>
                     <canvas id="trendChart"></canvas>
@@ -546,65 +528,65 @@
 
         <!-- Expenses Tab -->
         <div id="expenses" class="tab-content">
-            <div class="glass rounded-2xl p-6 mb-6 animate-scale-in">
-                <h3 class="text-xl font-bold mb-6 text-white flex items-center">
-                    <i class="fas fa-plus-circle mr-3 text-green-300"></i>
+            <div class="vercel-card p-6 mb-6 animate-scale-in">
+                <h3 class="text-lg font-semibold mb-6 text-gray-900 flex items-center">
+                    <i class="fas fa-plus-circle mr-3 text-green-600"></i>
                     Add What You Spent
                 </h3>
                 <form id="expenseForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <input type="text" id="expenseName" placeholder="What did you buy?" required 
-                           class="modern-input text-white placeholder-gray-300">
+                           class="vercel-input">
                     <input type="number" id="expenseAmount" placeholder="How much?" step="0.01" required 
-                           class="modern-input text-white placeholder-gray-300">
-                    <select id="expenseCategory" class="modern-input text-white">
-                        <option value="" class="bg-gray-800">Choose category</option>
-                        <optgroup label="Food & Drinks" class="bg-gray-800">
-                            <option value="Food" class="bg-gray-800">🍕 Food & Snacks</option>
-                            <option value="Drinks" class="bg-gray-800">🥤 Drinks & Coffee</option>
-                            <option value="Restaurant" class="bg-gray-800">🍔 Restaurant</option>
+                           class="vercel-input">
+                    <select id="expenseCategory" class="vercel-input">
+                        <option value="">Choose category</option>
+                        <optgroup label="Food & Drinks">
+                            <option value="Food">🍕 Food & Snacks</option>
+                            <option value="Drinks">🥤 Drinks & Coffee</option>
+                            <option value="Restaurant">🍔 Restaurant</option>
                         </optgroup>
-                        <optgroup label="Shopping" class="bg-gray-800">
-                            <option value="Clothes" class="bg-gray-800">👕 Clothes & Shoes</option>
-                            <option value="Electronics" class="bg-gray-800">📱 Electronics & Games</option>
-                            <option value="Accessories" class="bg-gray-800">⌚ Accessories</option>
+                        <optgroup label="Shopping">
+                            <option value="Clothes">👕 Clothes & Shoes</option>
+                            <option value="Electronics">📱 Electronics & Games</option>
+                            <option value="Accessories">⌚ Accessories</option>
                         </optgroup>
-                        <optgroup label="Entertainment" class="bg-gray-800">
-                            <option value="Movies" class="bg-gray-800">🎬 Movies & Streaming</option>
-                            <option value="Games" class="bg-gray-800">🎮 Games & Apps</option>
-                            <option value="Events" class="bg-gray-800">🎪 Events & Concerts</option>
+                        <optgroup label="Entertainment">
+                            <option value="Movies">🎬 Movies & Streaming</option>
+                            <option value="Games">🎮 Games & Apps</option>
+                            <option value="Events">🎪 Events & Concerts</option>
                         </optgroup>
-                        <optgroup label="Transportation" class="bg-gray-800">
-                            <option value="Gas" class="bg-gray-800">⛽ Gas</option>
-                            <option value="Transit" class="bg-gray-800">🚌 Public Transit</option>
-                            <option value="Uber" class="bg-gray-800">🚗 Rideshare</option>
+                        <optgroup label="Transportation">
+                            <option value="Gas">⛽ Gas</option>
+                            <option value="Transit">🚌 Public Transit</option>
+                            <option value="Uber">🚗 Rideshare</option>
                         </optgroup>
-                        <optgroup label="Other" class="bg-gray-800">
-                            <option value="Gifts" class="bg-gray-800">🎁 Gifts</option>
-                            <option value="School" class="bg-gray-800">📚 School Supplies</option>
-                            <option value="Health" class="bg-gray-800">💊 Health & Personal</option>
-                            <option value="Other" class="bg-gray-800">📦 Other</option>
+                        <optgroup label="Other">
+                            <option value="Gifts">🎁 Gifts</option>
+                            <option value="School">📚 School Supplies</option>
+                            <option value="Health">💊 Health & Personal</option>
+                            <option value="Other">📦 Other</option>
                         </optgroup>
                     </select>
-                    <button type="submit" class="btn-gradient">
+                    <button type="submit" class="vercel-btn-primary">
                         <i class="fas fa-plus mr-2"></i>Add Expense
                     </button>
                 </form>
             </div>
 
-            <div class="glass rounded-2xl p-6 animate-scale-in" style="animation-delay: 0.1s">
-                <h3 class="text-xl font-bold mb-6 text-white flex items-center">
-                    <i class="fas fa-history mr-3 text-blue-300"></i>
+            <div class="vercel-card p-6 animate-scale-in" style="animation-delay: 0.1s">
+                <h3 class="text-lg font-semibold mb-6 text-gray-900 flex items-center">
+                    <i class="fas fa-history mr-3 text-blue-600"></i>
                     Your Recent Spending
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full table-auto">
                         <thead>
-                            <tr class="border-b border-white border-opacity-20">
-                                <th class="text-left py-3 px-4 text-white font-semibold">Date</th>
-                                <th class="text-left py-3 px-4 text-white font-semibold">What You Bought</th>
-                                <th class="text-left py-3 px-4 text-white font-semibold">Category</th>
-                                <th class="text-right py-3 px-4 text-white font-semibold">Cost</th>
-                                <th class="text-center py-3 px-4 text-white font-semibold">Delete</th>
+                            <tr class="border-b border-gray-200">
+                                <th class="text-left py-3 px-4 text-gray-700 font-semibold text-sm">Date</th>
+                                <th class="text-left py-3 px-4 text-gray-700 font-semibold text-sm">What You Bought</th>
+                                <th class="text-left py-3 px-4 text-gray-700 font-semibold text-sm">Category</th>
+                                <th class="text-right py-3 px-4 text-gray-700 font-semibold text-sm">Cost</th>
+                                <th class="text-center py-3 px-4 text-gray-700 font-semibold text-sm">Delete</th>
                             </tr>
                         </thead>
                         <tbody id="expensesList">

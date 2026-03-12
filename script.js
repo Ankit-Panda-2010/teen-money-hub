@@ -265,10 +265,41 @@ function loadDashboard() {
     const monthlyExpenses = calculateMonthlyExpenses();
     const savingsRate = calculateSavingsRate(monthlyIncome, monthlyExpenses);
 
-    document.getElementById('totalBalance').textContent = formatCurrency(totalBalance);
-    document.getElementById('monthlyIncome').textContent = formatCurrency(monthlyIncome);
-    document.getElementById('monthlyExpenses').textContent = formatCurrency(monthlyExpenses);
-    document.getElementById('savingsRate').textContent = savingsRate + '%';
+    // Animate value updates
+    animateValue('totalBalance', totalBalance);
+    animateValue('monthlyIncome', monthlyIncome);
+    animateValue('monthlyExpenses', monthlyExpenses);
+    animateValue('savingsRate', savingsRate, '%');
+}
+
+function animateValue(elementId, endValue, suffix = '') {
+    const element = document.getElementById(elementId);
+    const startValue = parseFloat(element.textContent.replace(/[^0-9.-]/g, '')) || 0;
+    const duration = 1000;
+    const startTime = performance.now();
+    
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing function
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const currentValue = startValue + (endValue - startValue) * easeOutQuart;
+        
+        element.textContent = formatCurrency(currentValue) + suffix;
+        
+        // Add pulse effect at the end
+        if (progress === 1) {
+            element.classList.add('animate-pulse-once');
+            setTimeout(() => element.classList.remove('animate-pulse-once'), 300);
+        }
+        
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
+    }
+    
+    requestAnimationFrame(update);
 }
 
 function calculateTotalBalance() {
@@ -296,21 +327,49 @@ function calculateSavingsRate(income, expenses) {
 document.getElementById('expenseForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const expense = {
-        id: Date.now(),
-        description: document.getElementById('expenseName').value,
-        amount: parseFloat(document.getElementById('expenseAmount').value),
-        category: document.getElementById('expenseCategory').value,
-        date: new Date().toISOString()
-    };
+    // Add loading state to button
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '⏳ Adding...';
+    submitBtn.disabled = true;
+    submitBtn.classList.add('loading');
     
-    expenses.push(expense);
-    localStorage.setItem('expenses', JSON.stringify(expenses));
-    
-    this.reset();
-    loadExpenses();
-    loadDashboard();
-    initializeCharts(); // Use initializeCharts instead of updateCharts
+    setTimeout(() => {
+        const expense = {
+            id: Date.now(),
+            description: document.getElementById('expenseName').value,
+            amount: parseFloat(document.getElementById('expenseAmount').value),
+            category: document.getElementById('expenseCategory').value,
+            date: new Date().toISOString()
+        };
+        
+        expenses.push(expense);
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+        
+        // Reset button with success animation
+        submitBtn.innerHTML = '✅ Added!';
+        submitBtn.classList.remove('loading');
+        submitBtn.classList.add('success-animation');
+        
+        setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('success-animation');
+        }, 1000);
+        
+        this.reset();
+        loadExpenses();
+        loadDashboard();
+        initializeCharts();
+        
+        // Animate the new expense row
+        setTimeout(() => {
+            const firstRow = document.querySelector('#expensesList tr');
+            if (firstRow) {
+                firstRow.classList.add('animate-scale-in', 'success-animation');
+            }
+        }, 100);
+    }, 500);
 });
 
 function loadExpenses() {
@@ -342,11 +401,20 @@ function loadExpenses() {
 }
 
 function deleteExpense(id) {
-    expenses = expenses.filter(expense => expense.id !== id);
-    localStorage.setItem('expenses', JSON.stringify(expenses));
-    loadExpenses();
-    loadDashboard();
-    updateCharts();
+    const row = document.querySelector(`button[onclick="deleteExpense(${id})"]`).closest('tr');
+    
+    // Add fade out animation
+    row.style.transition = 'all 0.3s ease';
+    row.style.opacity = '0';
+    row.style.transform = 'translateX(-20px)';
+    
+    setTimeout(() => {
+        expenses = expenses.filter(expense => expense.id !== id);
+        localStorage.setItem('expenses', JSON.stringify(expenses));
+        loadExpenses();
+        loadDashboard();
+        updateCharts();
+    }, 300);
 }
 
 function getCategoryColor(category) {

@@ -125,6 +125,121 @@
             animation: scaleIn 0.3s ease-out;
         }
         
+        /* Enhanced animations */
+        @keyframes bounce {
+            0%, 20%, 53%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40%, 43% {
+                transform: translateY(-8px);
+            }
+            70% {
+                transform: translateY(-4px);
+            }
+            90% {
+                transform: translateY(-2px);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% {
+                background-position: -200px 0;
+            }
+            100% {
+                background-position: calc(200px + 100%) 0;
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .animate-bounce {
+            animation: bounce 1s infinite;
+        }
+        
+        .animate-pulse-once {
+            animation: pulse 0.3s ease-in-out;
+        }
+        
+        .animate-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 200px 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Enhanced hover effects */
+        .hover-glow:hover {
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark-mode .hover-glow:hover {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        
+        .hover-rotate:hover {
+            transform: rotate(5deg);
+        }
+        
+        /* Loading states */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+        
+        /* Success animations */
+        .success-animation {
+            animation: successPulse 0.6s ease-in-out;
+        }
+        
+        @keyframes successPulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+            }
+        }
+        
         /* Vercel-style cards */
         .vercel-card {
             background: var(--vercel-white);
@@ -426,7 +541,7 @@
         <div id="dashboard" class="tab-content active">
             <!-- Summary Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div class="vercel-card p-6 hover-lift animate-fade-in">
+                <div class="vercel-card p-6 hover-lift animate-fade-in hover-glow">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-600 mb-1 flex items-center">
@@ -440,7 +555,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.1s">
+                <div class="vercel-card p-6 hover-lift animate-fade-in hover-glow" style="animation-delay: 0.1s">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-600 mb-1 flex items-center">
@@ -454,7 +569,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.2s">
+                <div class="vercel-card p-6 hover-lift animate-fade-in hover-glow" style="animation-delay: 0.2s">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Monthly Expenses</p>
@@ -468,7 +583,7 @@
             </div>
             
             <!-- Savings Rate Card -->
-            <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.3s">
+            <div class="vercel-card p-6 hover-lift animate-fade-in hover-glow" style="animation-delay: 0.3s">
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-600 mb-1">Money Saved</p>
@@ -482,7 +597,7 @@
 
             <!-- Charts -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.4s">
+                <div class="vercel-card p-6 hover-lift animate-fade-in hover-glow" style="animation-delay: 0.4s">
                     <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-900">
                         <i class="fas fa-chart-pie mr-2 text-purple-600"></i>
                         Spending Breakdown
@@ -490,7 +605,7 @@
                     <canvas id="expenseChart"></canvas>
                     <div id="expenseLegend" class="mt-4 grid grid-cols-2 gap-2 text-sm text-gray-600"></div>
                 </div>
-                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.5s">
+                <div class="vercel-card p-6 hover-lift animate-fade-in hover-glow" style="animation-delay: 0.5s">
                     <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-900">
                         <i class="fas fa-bullseye mr-2 text-green-600"></i>
                         Savings Goals Progress
@@ -502,21 +617,21 @@
 
             <!-- Additional Charts -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.6s">
+                <div class="vercel-card p-6 hover-lift animate-fade-in hover-glow" style="animation-delay: 0.6s">
                     <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-900">
                         <i class="fas fa-wallet mr-2 text-blue-600"></i>
                         Allowance Breakdown
                     </h3>
                     <canvas id="allowanceChart"></canvas>
                 </div>
-                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.7s">
+                <div class="vercel-card p-6 hover-lift animate-fade-in hover-glow" style="animation-delay: 0.7s">
                     <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-900">
                         <i class="fas fa-shopping-bag mr-2 text-orange-600"></i>
                         Top Spending Categories
                     </h3>
                     <canvas id="topCategoriesChart"></canvas>
                 </div>
-                <div class="vercel-card p-6 hover-lift animate-fade-in" style="animation-delay: 0.8s">
+                <div class="vercel-card p-6 hover-lift animate-fade-in hover-glow" style="animation-delay: 0.8s">
                     <h3 class="text-lg font-semibold mb-4 flex items-center text-gray-900">
                         <i class="fas fa-calendar-alt mr-2 text-indigo-600"></i>
                         Monthly Trend

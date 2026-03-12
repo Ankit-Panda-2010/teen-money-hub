@@ -3433,7 +3433,276 @@ const blogArticles = {
     }
 };
 
-// Teen Money Tips functionality
+// Enhanced Financial Insights functionality
+function updateSpendingInsights() {
+    const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+    
+    if (expenses.length === 0) {
+        document.getElementById('avgDailySpend').textContent = '$0.00';
+        document.getElementById('biggestExpense').textContent = '$0.00';
+        document.getElementById('frequentCategory').textContent = '-';
+        document.getElementById('daysSinceLast').textContent = '0';
+        return;
+    }
+
+    // Calculate average daily spend
+    const totalSpent = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+    const daysSinceFirst = Math.max(1, Math.floor((Date.now() - new Date(expenses[expenses.length - 1].date)) / (1000 * 60 * 60 * 24)));
+    const avgDaily = totalSpent / daysSinceFirst;
+    document.getElementById('avgDailySpend').textContent = `$${avgDaily.toFixed(2)}`;
+
+    // Find biggest expense
+    const biggestExpense = expenses.reduce((max, exp) => exp.amount > max.amount ? exp : max, expenses[0]);
+    document.getElementById('biggestExpense').textContent = `$${biggestExpense.amount.toFixed(2)}`;
+
+    // Find most frequent category
+    const categoryCounts = {};
+    expenses.forEach(exp => {
+        categoryCounts[exp.category] = (categoryCounts[exp.category] || 0) + 1;
+    });
+    const mostFrequent = Object.keys(categoryCounts).reduce((a, b) => categoryCounts[a] > categoryCounts[b] ? a : b);
+    document.getElementById('frequentCategory').textContent = mostFrequent.charAt(0).toUpperCase() + mostFrequent.slice(1);
+
+    // Days since last expense
+    const lastExpense = expenses[0];
+    const daysSinceLast = Math.floor((Date.now() - new Date(lastExpense.date)) / (1000 * 60 * 60 * 24));
+    document.getElementById('daysSinceLast').textContent = daysSinceLast.toString();
+}
+
+// Savings Goals functionality
+function addNewGoal() {
+    const goalName = prompt('What are you saving for?');
+    if (!goalName) return;
+
+    const targetAmount = prompt('What is your target amount?');
+    if (!targetAmount || isNaN(targetAmount)) return;
+
+    const currentAmount = prompt('How much have you saved so far?');
+    if (currentAmount === null || isNaN(currentAmount)) return;
+
+    const goal = {
+        name: goalName,
+        target: parseFloat(targetAmount),
+        current: parseFloat(currentAmount) || 0,
+        created: new Date().toISOString()
+    };
+
+    let goals = JSON.parse(localStorage.getItem('savingsGoals') || '[]');
+    goals.push(goal);
+    localStorage.setItem('savingsGoals', JSON.stringify(goals));
+    
+    updateSavingsGoalsDisplay();
+    showNotification('New savings goal added! 💰', 'success');
+}
+
+function updateSavingsGoalsDisplay() {
+    const goals = JSON.parse(localStorage.getItem('savingsGoals') || '[]');
+    const goalsContainer = document.getElementById('savingsGoals');
+    
+    if (goals.length === 0) {
+        goalsContainer.innerHTML = '<p class="text-gray-500 text-center">No savings goals yet. Start by adding your first goal!</p>';
+        return;
+    }
+
+    goalsContainer.innerHTML = goals.map((goal, index) => {
+        const percentage = (goal.current / goal.target) * 100;
+        const progressColor = percentage >= 75 ? 'bg-green-600' : percentage >= 50 ? 'bg-blue-600' : percentage >= 25 ? 'bg-yellow-600' : 'bg-red-600';
+        
+        return `
+            <div class="space-y-2">
+                <div class="flex justify-between items-center">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">${goal.name}</span>
+                    <span class="text-sm text-gray-600 dark:text-gray-400">$${goal.current.toFixed(2)} / $${goal.target.toFixed(2)}</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div class="${progressColor} h-2 rounded-full transition-all duration-500" style="width: ${Math.min(percentage, 100)}%"></div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-gray-500">${percentage.toFixed(0)}% complete</span>
+                    <button onclick="deleteGoal(${index})" class="text-xs text-red-600 hover:text-red-800">Delete</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function deleteGoal(index) {
+    if (confirm('Are you sure you want to delete this goal?')) {
+        let goals = JSON.parse(localStorage.getItem('savingsGoals') || '[]');
+        goals.splice(index, 1);
+        localStorage.setItem('savingsGoals', JSON.stringify(goals));
+        updateSavingsGoalsDisplay();
+        showNotification('Goal deleted', 'info');
+    }
+}
+
+// Financial Health Score calculation
+function updateFinancialHealthScore() {
+    const financialData = JSON.parse(localStorage.getItem('financialData') || '{}');
+    const expenses = JSON.parse(localStorage.getItem('expenses') || '[]');
+    
+    let score = 50; // Base score
+    
+    // Budget adherence (up to 25 points)
+    const monthlyIncome = financialData.monthlyIncome || 0;
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    const monthlyExpenses = expenses
+        .filter(exp => {
+            const expDate = new Date(exp.date);
+            return expDate.getMonth() === currentMonth && expDate.getFullYear() === currentYear;
+        })
+        .reduce((sum, exp) => sum + exp.amount, 0);
+    
+    const budgetRatio = monthlyIncome > 0 ? monthlyExpenses / monthlyIncome : 1;
+    if (budgetRatio <= 0.8) score += 25;
+    else if (budgetRatio <= 0.9) score += 15;
+    else if (budgetRatio <= 1.0) score += 5;
+    
+    // Savings rate (up to 15 points)
+    const savingsRate = monthlyIncome > 0 ? ((monthlyIncome - monthlyExpenses) / monthlyIncome) * 100 : 0;
+    if (savingsRate >= 20) score += 15;
+    else if (savingsRate >= 10) score += 10;
+    else if (savingsRate >= 5) score += 5;
+    
+    // Consistency (up to 10 points)
+    const daysSinceFirst = expenses.length > 0 ? Math.floor((Date.now() - new Date(expenses[expenses.length - 1].date)) / (1000 * 60 * 60 * 24)) : 0;
+    if (daysSinceFirst >= 30 && expenses.length >= 10) score += 10;
+    else if (daysSinceFirst >= 14 && expenses.length >= 5) score += 5;
+    
+    // Update display
+    const scoreElement = document.getElementById('healthScore');
+    const scoreText = scoreElement.querySelector('.text-3xl') || scoreElement;
+    const statusText = scoreElement.querySelector('.text-sm') || scoreElement.nextElementSibling;
+    
+    if (scoreText) {
+        scoreText.textContent = score.toString();
+    }
+    
+    if (statusText) {
+        let status = 'Poor';
+        let color = 'text-red-600';
+        if (score >= 80) {
+            status = 'Excellent';
+            color = 'text-green-600';
+        } else if (score >= 60) {
+            status = 'Good';
+            color = 'text-blue-600';
+        } else if (score >= 40) {
+            status = 'Fair';
+            color = 'text-yellow-600';
+        }
+        statusText.textContent = status;
+        statusText.className = `text-sm ${color} block`;
+    }
+    
+    // Update progress circle
+    const circle = document.querySelector('.text-green-500');
+    if (circle) {
+        const circumference = 2 * Math.PI * 56;
+        const offset = circumference - (score / 100) * circumference;
+        circle.style.strokeDashoffset = offset;
+    }
+}
+
+// Enhanced article functionality
+function loadMoreArticles() {
+    showNotification('Loading more articles...', 'info');
+    setTimeout(() => {
+        showNotification('All articles loaded! 📚', 'success');
+    }, 1000);
+}
+
+function openArticle(articleId) {
+    showNotification(`Opening article: ${articleId}`, 'info');
+    // In a real app, this would navigate to the full article
+}
+
+// Enhanced notification system
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 animate-slide-in ${
+        type === 'success' ? 'bg-green-500 text-white' :
+        type === 'error' ? 'bg-red-500 text-white' :
+        type === 'warning' ? 'bg-yellow-500 text-white' :
+        'bg-blue-500 text-white'
+    }`;
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <span>${message}</span>
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white/80 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.add('animate-fade-out');
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Initialize all enhanced features
+document.addEventListener('DOMContentLoaded', function() {
+    // Update insights when expenses change
+    const originalAddExpense = window.addExpense;
+    window.addExpense = function() {
+        originalAddExpense.apply(this, arguments);
+        setTimeout(() => {
+            updateSpendingInsights();
+            updateFinancialHealthScore();
+        }, 100);
+    };
+    
+    const originalDeleteExpense = window.deleteExpense;
+    window.deleteExpense = function() {
+        originalDeleteExpense.apply(this, arguments);
+        setTimeout(() => {
+            updateSpendingInsights();
+            updateFinancialHealthScore();
+        }, 100);
+    };
+    
+    // Initialize displays
+    updateSpendingInsights();
+    updateSavingsGoalsDisplay();
+    updateFinancialHealthScore();
+    
+    // Add search functionality for articles
+    document.getElementById('blogSearch')?.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const articles = document.querySelectorAll('#tips article');
+        
+        articles.forEach(article => {
+            const title = article.querySelector('h3').textContent.toLowerCase();
+            const description = article.querySelector('p').textContent.toLowerCase();
+            
+            if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                article.style.display = 'block';
+            } else {
+                article.style.display = 'none';
+            }
+        });
+    });
+    
+    // Add category filter functionality
+    document.getElementById('blogCategory')?.addEventListener('change', function(e) {
+        const category = e.target.value;
+        const articles = document.querySelectorAll('#tips article');
+        
+        articles.forEach(article => {
+            const articleCategory = article.querySelector('.bg-red-100, .bg-yellow-100, .bg-green-100, .bg-purple-100, .bg-blue-100, .bg-indigo-100');
+            
+            if (!category || articleCategory.textContent.toLowerCase().includes(category.toLowerCase())) {
+                article.style.display = 'block';
+            } else {
+                article.style.display = 'none';
+            }
+        });
+    });
+});
 const financialTips = [
     "Save 10% of everything you get: Whether it's allowance, birthday money, or job earnings - put 10% away before spending anything!",
     "The 50/30/20 rule: 50% for needs (food, transport), 30% for wants (games, clothes), 20% for savings.",
